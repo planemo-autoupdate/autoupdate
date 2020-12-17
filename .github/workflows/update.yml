@@ -70,3 +70,5 @@ jobs:
 
         echo "Running autoupdate command..."
         planemo autoupdate .
+
+        git status
