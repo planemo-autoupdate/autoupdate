@@ -48,7 +48,7 @@ jobs:
         
         echo "Installing planemo..."
         pip install https://github.com/simonbray/planemo/archive/autoupdate-sb.zip  # install from Simon's fork for now
-        #pip install -e planemo/
+        pip install -e planemo/
         #planemo --help
 
         # git credentials
