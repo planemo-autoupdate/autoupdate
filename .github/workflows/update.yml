@@ -73,3 +73,8 @@ jobs:
         planemo autoupdate
 
         git diff
+        git add .
+        git commit -m "Version Update"
+
+        echo "Creating a PR..."
+        gh pr create --title "Autoupdate" --body "Updating package version changes in the galaxy tools repository" --repo simonbray/galaxytools
