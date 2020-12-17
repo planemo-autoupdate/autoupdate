@@ -5,7 +5,7 @@ name: CI
 # Controls when the action will run. 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "0 4 * * 1"
   push:
     branches: [ main ] 
   
@@ -46,7 +46,7 @@ jobs:
         virtualenv .au
         source .au/bin/activate
         
-        # pip install conda
+        echo "Installing planemo..."
         pip install https://github.com/simonbray/planemo/archive/autoupdate-sb.zip  # install from Simon's fork for now
-        pip install -e planemo/
+        #pip install -e planemo/
         planemo --help
