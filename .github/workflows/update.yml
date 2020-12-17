@@ -45,11 +45,12 @@ jobs:
         sudo pip3 install virtualenv
         virtualenv .au
         source .au/bin/activate
-        pip install conda
+        #pip install conda
         
         echo "Installing planemo..."
         pip install https://github.com/simonbray/planemo/archive/autoupdate-sb.zip  # install from Simon's fork for now
         #planemo --help
+        planemo conda_init
 
         # git credentials
         git config --global user.email "sbray@informatik.uni-freiburg.de"
