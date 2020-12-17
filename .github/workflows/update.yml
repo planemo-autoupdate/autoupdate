@@ -60,14 +60,13 @@ jobs:
         echo "Authenticating..."
         gh auth login --with-token < token.txt
 
-        echo "Running autoupdate command..."
-        planemo autoupdate
-
         echo "Getting git remote"
         git remote -v
+
+        cd chemicaltoolbox/
 
         echo "Current directory is:"
         pwd
 
-        echo "Listing files/directories..."
-        ls
+        echo "Running autoupdate command..."
+        planemo autoupdate .
