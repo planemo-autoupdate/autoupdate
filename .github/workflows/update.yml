@@ -49,7 +49,7 @@ jobs:
         echo "Installing planemo..."
         pip install https://github.com/simonbray/planemo/archive/autoupdate-sb.zip  # install from Simon's fork for now
         #pip install -e planemo/
-        planemo --help
+        #planemo --help
 
         # git credentials
         git config --global user.email "sbray@informatik.uni-freiburg.de"
@@ -68,3 +68,6 @@ jobs:
 
         echo "Current directory is:"
         pwd
+
+        echo "Listing files/directories..."
+        ls
