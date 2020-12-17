@@ -50,3 +50,13 @@ jobs:
         pip install https://github.com/simonbray/planemo/archive/autoupdate-sb.zip  # install from Simon's fork for now
         #pip install -e planemo/
         planemo --help
+
+        # git credentials
+        git config --global user.email "sbray@informatik.uni-freiburg.de"
+        git config --global user.name "planemo-autoupdate"
+
+        echo ${{ secrets.PAT }} > token.txt
+
+        # Authenticate
+        echo "Authenticating..."
+        gh auth login --with-token < token.txt
