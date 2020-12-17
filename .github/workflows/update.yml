@@ -63,12 +63,12 @@ jobs:
         echo "Getting git remote"
         git remote -v
 
-        cd chemicaltoolbox/
+        cd chemicaltoolbox/im-pipelines
 
         echo "Current directory is:"
         pwd
 
         echo "Running autoupdate command..."
-        planemo autoupdate .
+        planemo autoupdate
 
         git status
