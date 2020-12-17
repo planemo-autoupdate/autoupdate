@@ -57,6 +57,11 @@ jobs:
 
         echo ${{ secrets.PAT }} > token.txt
 
-        # Authenticate
         echo "Authenticating..."
         gh auth login --with-token < token.txt
+
+        echo "Running autoupdate command..."
+        planemo autoupdate
+
+        echo "Getting git status"
+        git status
