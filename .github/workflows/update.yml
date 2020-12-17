@@ -63,5 +63,5 @@ jobs:
         echo "Running autoupdate command..."
         planemo autoupdate
 
-        echo "Getting git status"
-        git status
+        echo "Getting git remote"
+        git remote -v
