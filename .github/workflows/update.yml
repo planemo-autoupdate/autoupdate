@@ -65,3 +65,6 @@ jobs:
 
         echo "Getting git remote"
         git remote -v
+
+        echo "Current directory is:"
+        pwd
