@@ -77,4 +77,4 @@ jobs:
         git commit -m "Version Update"
 
         echo "Creating a PR..."
-        gh pr create --head main --fill --repo simonbray/galaxytools
+        gh pr create --head master --fill --repo simonbray/galaxytools
