@@ -77,4 +77,4 @@ jobs:
         git commit -m "Version Update"
 
         echo "Creating a PR..."
-        gh pr create --head --title "Autoupdate" --body "Updating package version changes in the galaxy tools repository" --repo simonbray/galaxytools
+        gh pr create --head main --fill --repo simonbray/galaxytools
