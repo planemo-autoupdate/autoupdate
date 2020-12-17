@@ -70,12 +70,12 @@ jobs:
         pwd
 
         echo "Running autoupdate command..."
-        planemo autoupdate
+        #planemo autoupdate
 
-        git diff
-        git add .
-        git commit -m "Version Update"
-        git push origin master
+        #git diff
+        #git add .
+        #git commit -m "Version Update"
+        #git push origin master
 
         echo "Creating a PR..."
-        gh pr create --head master --fill --base master --repo simonbray/galaxytools
+        gh pr create --fill --repo simonbray/galaxytools
