@@ -65,7 +65,7 @@ jobs:
         echo "Pulling latest from upstream"
         git pull upstream master --allow-unrelated-histories
 
-        cd chemicaltoolbox/sucos
+        cd chemicaltoolbox/im-piplines
 
         echo "Current directory is:"
         pwd
@@ -75,8 +75,8 @@ jobs:
 
         git status
 
-        #git add .
-        #git commit -m "Version Update"
+        git add .
+        git commit -m "Version Update"
         #git push origin master
 
         echo "Authenticating..."
@@ -84,5 +84,5 @@ jobs:
         gh auth login --with-token < token.txt
 
         #echo "Creating a PR..."
-        #gh pr create --fill --repo simonbray/galaxytools
+        gh pr create --fill --repo simonbray/galaxytools
 
