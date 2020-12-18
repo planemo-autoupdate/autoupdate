@@ -22,9 +22,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
       with:
-        token: ${{ secrets.PAT }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         repository: planemo-autoupdate/galaxytools
-        #ref: master
         
     - uses: webfactory/ssh-agent@v0.4.1
       with:
@@ -57,15 +56,16 @@ jobs:
         git config --global user.email "sbray@informatik.uni-freiburg.de"
         git config --global user.name "planemo-autoupdate"
 
-        #echo ${{ secrets.PAT }} > token.txt
-
-        echo "Authenticating..."
-        #gh auth login --with-token < token.txt
+        echo "Adding upstream..."
+        git remote add upstream https://github.com/simonbray/galaxytools.git
 
         echo "Getting git remote"
         git remote -v
 
-        cd chemicaltoolbox/im-pipelines
+        echo "Pulling latest from upstream"
+        git pull upstream master --allow-unrelated-histories
+
+        cd chemicaltoolbox/sucos
 
         echo "Current directory is:"
         pwd
@@ -73,20 +73,16 @@ jobs:
         echo "Running autoupdate command..."
         planemo autoupdate
 
+        git status
+
         #git add .
         #git commit -m "Version Update"
         #git push origin master
 
+        echo "Authenticating..."
+        echo ${{ secrets.PAT }} > token.txt
+        gh auth login --with-token < token.txt
+
         #echo "Creating a PR..."
         #gh pr create --fill --repo simonbray/galaxytools
 
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v3
-      with:
-        token: ${{ secrets.PAT }}
-        commit-message: update version
-        title: Update Version
-        body: Update conda package versions to reflect release changes
-        branch: autoupdate
-        delete-branch: true
-        base: ${{ github.head_ref }}
