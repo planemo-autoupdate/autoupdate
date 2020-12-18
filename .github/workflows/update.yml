@@ -80,10 +80,10 @@ jobs:
         #gh pr create --fill --repo simonbray/galaxytools
 
     - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          commit-message: update version
-          title: Update Version
-          body: Update conda package versions to reflect release changes
-          branch: simonbray/galaxytools
-          base: master
+      uses: peter-evans/create-pull-request@v3
+      with:
+        commit-message: update version
+        title: Update Version
+        body: Update conda package versions to reflect release changes
+        branch: simonbray/galaxytools
+        base: master
