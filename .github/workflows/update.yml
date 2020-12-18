@@ -65,7 +65,7 @@ jobs:
         echo "Pulling latest from upstream"
         git pull upstream master --allow-unrelated-histories
 
-        cd chemicaltoolbox/im-piplines
+        cd chemicaltoolbox/im-pipelines
 
         echo "Current directory is:"
         pwd
