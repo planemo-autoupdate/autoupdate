@@ -63,7 +63,8 @@ jobs:
         git remote -v
 
         echo "Pulling latest from upstream"
-        git pull upstream master --allow-unrelated-histories
+        #git pull upstream master --allow-unrelated-histories
+        git pull origin master
 
         cd chemicaltoolbox/im-pipelines
 
