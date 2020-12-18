@@ -23,8 +23,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         token: ${{ secrets.PAT }}
-        repository: simonbray/galaxytools
-        ref: master
+        repository: planemo-autoupdate/galaxytools
+        #ref: master
         
     - uses: webfactory/ssh-agent@v0.4.1
       with:
@@ -84,9 +84,9 @@ jobs:
       uses: peter-evans/create-pull-request@v3
       with:
         token: ${{ secrets.PAT }}
-        #commit-message: update version
-        #title: Update Version
-        #body: Update conda package versions to reflect release changes
-        #branch: autoupdate
-        #delete-branch: true
-        #base: ${{ github.head_ref }}
+        commit-message: update version
+        title: Update Version
+        body: Update conda package versions to reflect release changes
+        branch: autoupdate
+        delete-branch: true
+        base: ${{ github.head_ref }}
