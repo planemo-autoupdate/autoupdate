@@ -22,7 +22,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/galaxytools
         
     - uses: webfactory/ssh-agent@v0.4.1
@@ -83,8 +83,8 @@ jobs:
         gh auth login --with-token < token.txt
 
         echo "Pushing..."
-        git remote set-url --push origin https://planemo-autoupdate:${{ secrets.PAT }}@github.com/planemo-autoupdate/galaxytools.git
-        git push origin master
+        #git remote set-url --push 
+        git push https://$GITHUB_ACTOR:${{ secrets.PAT }}@github.com/$GITHUB_ACTOR/galaxytools.git master
 
         #echo "Creating a PR..."
         gh pr create --fill --repo simonbray/galaxytools
