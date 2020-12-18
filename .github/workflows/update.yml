@@ -86,6 +86,6 @@ jobs:
         commit-message: update version
         title: Update Version
         body: Update conda package versions to reflect release changes
-        branch: master
+        branch: autoupdate
         delete-branch: true
         base: master
