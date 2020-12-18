@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         token: ${{ secrets.PAT }}
-        repository: lorrainealisha75/galaxytools
+        repository: simonbray/galaxytools
         
     - uses: webfactory/ssh-agent@v0.4.1
       with:
