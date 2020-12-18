@@ -83,7 +83,7 @@ jobs:
         gh auth login --with-token < token.txt
 
         echo "Pushing..."
-        git remote set-url --push origin https://planemo-autoupdate:$GITHUB_TOKEN@github.com/planemo-autoupdate/galaxytools.git
+        git remote set-url --push origin https://planemo-autoupdate:${{ secrets.PAT }}@github.com/planemo-autoupdate/galaxytools.git
         git push origin master
 
         #echo "Creating a PR..."
