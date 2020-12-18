@@ -77,7 +77,7 @@ jobs:
 
         git add .
         git commit -m "Version Update"
-        git push origin master
+        #git push origin master
 
         echo "Authenticating..."
         echo ${{ secrets.PAT }} > token.txt
