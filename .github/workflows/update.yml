@@ -61,8 +61,8 @@ jobs:
         echo "Authenticating..."
         gh auth login --with-token < token.txt
 
-        echo "Getting git remote"
-        git remote -v
+        #echo "Getting git remote"
+        #git remote -v
 
         cd chemicaltoolbox/im-pipelines
 
