@@ -70,7 +70,7 @@ jobs:
         echo "Current directory is:"
         pwd
 
-        echo "Running autoupdate command..."
+        echo "Running autoupdate command...."
         planemo autoupdate
 
         git status
