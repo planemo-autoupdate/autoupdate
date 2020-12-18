@@ -24,6 +24,7 @@ jobs:
       with:
         token: ${{ secrets.PAT }}
         repository: simonbray/galaxytools
+        ref: master
         
     - uses: webfactory/ssh-agent@v0.4.1
       with:
@@ -88,4 +89,4 @@ jobs:
         body: Update conda package versions to reflect release changes
         branch: autoupdate
         delete-branch: true
-        base: master
+        base: ${{ github.head_ref }}
