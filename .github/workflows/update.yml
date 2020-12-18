@@ -78,14 +78,13 @@ jobs:
         git add .
         git commit -m "Version Update"
 
-        echo "Authenticating..."
-        echo ${{ secrets.PAT }} > token.txt
-        gh auth login --with-token < token.txt
+        #echo "Authenticating..."
+        #echo ${{ secrets.PAT }} > token.txt
+        #gh auth login --with-token < token.txt
 
         echo "Pushing..."
-        #git remote set-url --push 
         git push https://$GITHUB_ACTOR:${{ secrets.PAT }}@github.com/$GITHUB_ACTOR/galaxytools.git master
 
-        #echo "Creating a PR..."
-        gh pr create --fill --repo simonbray/galaxytools
+        echo "Creating a PR..."
+        gh pr create --head master --fill --repo simonbray/galaxytools
 
