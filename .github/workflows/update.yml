@@ -57,10 +57,10 @@ jobs:
         git config --global user.email "sbray@informatik.uni-freiburg.de"
         git config --global user.name "planemo-autoupdate"
 
-        echo ${{ secrets.PAT }} > token.txt
+        #echo ${{ secrets.PAT }} > token.txt
 
         echo "Authenticating..."
-        gh auth login --with-token < token.txt
+        #gh auth login --with-token < token.txt
 
         echo "Getting git remote"
         git remote -v
@@ -87,6 +87,6 @@ jobs:
         commit-message: update version
         title: Update Version
         body: Update conda package versions to reflect release changes
-        branch: autoupdate
-        delete-branch: true
+        #branch: autoupdate
+        #delete-branch: true
         base: ${{ github.head_ref }}
