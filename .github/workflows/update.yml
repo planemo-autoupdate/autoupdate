@@ -77,11 +77,14 @@ jobs:
 
         git add .
         git commit -m "Version Update"
-        #git push origin master
 
         echo "Authenticating..."
         echo ${{ secrets.PAT }} > token.txt
         gh auth login --with-token < token.txt
+        
+        echo "Pushing..."
+        git remote set-url --push origin https://planemo-autoupdate:$GITHUB_TOKEN@github.com/galaxytools.git
+        git push origin master
 
         #echo "Creating a PR..."
         gh pr create --fill --repo simonbray/galaxytools
