@@ -76,12 +76,15 @@ jobs:
 
         git status
 
+        echo "Adding..."
         git add .
+
+        echo "Committing..."
         git commit -m "Version Update"
 
         #echo "Authenticating..."
-        #echo ${{ secrets.PAT }} > token.txt
-        #gh auth login --with-token < token.txt
+        echo ${{ secrets.PAT }} > token.txt
+        gh auth login --with-token < token.txt
 
         echo "Pushing..."
         #git push https://$GITHUB_ACTOR:${{ secrets.PAT }}@github.com/$GITHUB_ACTOR/galaxytools.git master
