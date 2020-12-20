@@ -24,6 +24,7 @@ jobs:
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/galaxytools
+        ref: master
         
     - uses: webfactory/ssh-agent@v0.4.1
       with:
@@ -90,5 +91,5 @@ jobs:
         #git push https://$GITHUB_ACTOR:${{ secrets.PAT }}@github.com/$GITHUB_ACTOR/galaxytools.git master
 
         echo "Creating a PR..."
-        gh pr create --title "Version Update" --body "XYZ" --repo simonbray/galaxytools
+        gh pr create --head master --title "Version Update" --body "XYZ" --repo simonbray/galaxytools
 
