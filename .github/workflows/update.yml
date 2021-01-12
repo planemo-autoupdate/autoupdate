@@ -102,7 +102,7 @@ jobs:
         #git push https://$GITHUB_ACTOR:${{ secrets.PAT }}@github.com/$GITHUB_ACTOR/galaxy-tools-compchem.git master
 
         echo "Creating a PR..."
-        gh pr create --head planemo-autoupdate:master --title "Autoupdate package versions" --body "Running planemo autoupdate tool on this repository" --repo galaxycomputationalchemistry/galaxy-tools-compchem
+        gh pr create --head planemo-autoupdate/galaxy-tools-compchem:master --title "Autoupdate package versions" --body "Running planemo autoupdate tool on this repository" --repo galaxycomputationalchemistry/galaxy-tools-compchem
 
 
 
@@ -139,7 +139,7 @@ jobs:
         #git push https://$GITHUB_ACTOR:${{ secrets.PAT }}@github.com/$GITHUB_ACTOR/galaxytools.git master
 
         echo "Creating a PR..."
-        gh pr create --head planemo-autoupdate:master --title "Autoupdate package versions" --body "Running planemo autoupdate tool on this repository" --repo bgruening/galaxytools
+        gh pr create --head planemo-autoupdate/galaxytools:master --title "Autoupdate package versions" --body "Running planemo autoupdate tool on this repository" --repo bgruening/galaxytools
 
 
 
