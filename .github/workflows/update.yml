@@ -84,7 +84,7 @@ jobs:
         git pull upstream master --allow-unrelated-histories
 
         echo "Running autoupdate command..."
-        planemo autoupdate
+        planemo autoupdate -r
 
         git status
 
@@ -96,7 +96,7 @@ jobs:
 
 
         cd ..
-        cd galaxytools/chemicaltoolbox/sucos
+        cd galaxytools
 
         echo "Current directory is: "
         pwd
@@ -110,7 +110,7 @@ jobs:
         git pull upstream master --allow-unrelated-histories
 
         echo "Running autoupdate command..."
-        planemo autoupdate
+        planemo autoupdate -r
 
         git status
 
