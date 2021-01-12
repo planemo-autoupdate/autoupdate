@@ -98,7 +98,7 @@ jobs:
         cd ..
         cd galaxytools
 
-        echo "Current directory is:"
+        echo "Current directory is: "
         pwd
 
         git remote add upstream https://github.com/bgruening/galaxytools.git
