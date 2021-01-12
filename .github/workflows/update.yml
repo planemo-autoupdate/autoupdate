@@ -96,7 +96,7 @@ jobs:
 
 
         cd ..
-        cd galaxytools/chemicaltoolbox
+        cd galaxytools/chemicaltoolbox/sucos
 
         echo "Current directory is: "
         pwd
