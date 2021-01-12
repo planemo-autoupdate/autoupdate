@@ -94,3 +94,29 @@ jobs:
         echo "Committing files..."
         #git commit -m "Version Update"
 
+
+        cd ..
+        cd galaxytools
+
+        echo "Current directory is:"
+        pwd
+
+        git remote add upstream https://github.com/bgruening/galaxytools.git
+
+        echo "Getting git remote"
+        git remote -v
+
+        echo "Pulling latest from upstream"
+        git pull upstream master --allow-unrelated-histories
+
+        echo "Running autoupdate command..."
+        planemo autoupdate
+
+        git status
+
+        echo "Adding files to stage..."
+        #git add .
+
+        echo "Committing files..."
+        #git commit -m "Version Update"
+
