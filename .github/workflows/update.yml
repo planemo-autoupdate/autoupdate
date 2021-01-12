@@ -20,16 +20,17 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - name: checkout galaxytools
-    - uses: actions/checkout@v2
+
+    - name: Checkout galaxytools
+      uses: actions/checkout@v2
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/galaxytools
         ref: master
         path: galaxytools
 
-    - name: checkout cheminformatics_htmd_paper
-    - uses: actions/checkout@v2
+    - name: Checkout cheminformatics_htmd_paper
+      uses: actions/checkout@v2
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/cheminformatics_htmd_paper
