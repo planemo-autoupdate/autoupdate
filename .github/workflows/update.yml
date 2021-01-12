@@ -45,7 +45,8 @@ jobs:
     - name: Run a multi-line script
       run: |
         echo "Setting up virtual env..."
-        /home/runner/work/autoupdate/autoupdate/.au/bin/python -m pip install --upgrade pip
+        cd /home/runner/work/autoupdate/autoupdate/.au/bin/
+        python -m pip install --upgrade pip
         pip3 install wheel
         sudo pip3 install virtualenv
         virtualenv .au
