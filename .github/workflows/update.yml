@@ -20,11 +20,21 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: checkout galaxytools
     - uses: actions/checkout@v2
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/galaxytools
         ref: master
+        path: galaxytools
+
+    - name: checkout cheminformatics_htmd_paper
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.PAT }}
+        repository: planemo-autoupdate/cheminformatics_htmd_paper
+        ref: master
+        path: cheminformatics_htmd_paper
         
     - uses: webfactory/ssh-agent@v0.4.1
       with:
@@ -50,7 +60,6 @@ jobs:
         
         echo "Installing planemo..."
         pip install https://github.com/simonbray/planemo/archive/autoupdate-sb.zip  # install from Simon's fork for now
-        #planemo --help
         planemo conda_init
 
         # git credentials
@@ -63,11 +72,11 @@ jobs:
         echo "Getting git remote"
         git remote -v
 
-        echo "Pulling latest from upstream"
+        echo "Pulling latest from origin"
         #git pull upstream master --allow-unrelated-histories
-        git pull origin master
+        #git pull origin master
 
-        cd chemicaltoolbox/sucos
+        #cd chemicaltoolbox/sucos
 
         echo "Current directory is:"
         pwd
@@ -77,11 +86,11 @@ jobs:
 
         git status
 
-        echo "Adding..."
-        git add .
+        echo "Adding files to stage..."
+        #git add .
 
-        echo "Committing..."
-        git commit -m "Version Update"
+        echo "Committing files..."
+        #git commit -m "Version Update"
 
         #echo "Authenticating..."
         echo ${{ secrets.PAT }} > token.txt
@@ -91,5 +100,5 @@ jobs:
         #git push https://$GITHUB_ACTOR:${{ secrets.PAT }}@github.com/$GITHUB_ACTOR/galaxytools.git master
 
         echo "Creating a PR..."
-        gh pr create --head planemo-autoupdate:master --title "Version Update" --body "XYZ" --repo lorrainealisha75/galaxytools
+        #gh pr create --head planemo-autoupdate:master --title "Version Update" --body "XYZ" --repo lorrainealisha75/galaxytools
 
