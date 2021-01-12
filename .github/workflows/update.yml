@@ -29,13 +29,13 @@ jobs:
         ref: master
         path: galaxytools
 
-    - name: Checkout cheminformatics_htmd_paper
+    - name: Checkout galaxy-tools-compchem
       uses: actions/checkout@v2
       with:
         token: ${{ secrets.PAT }}
-        repository: planemo-autoupdate/cheminformatics_htmd_paper
+        repository: planemo-autoupdate/galaxy-tools-compchem
         ref: master
-        path: cheminformatics_htmd_paper
+        path: galaxy-tools-compchem
         
     - uses: webfactory/ssh-agent@v0.4.1
       with:
@@ -70,8 +70,17 @@ jobs:
         echo "Current directory is:"
         pwd
 
-        cd cheminformatics_htmd_paper
+        cd galaxy-tools-compchem
 
         echo "Current directory is:"
         pwd
+
+        git remote add upstream https://github.com/galaxycomputationalchemistry/galaxy-tools-compchem.git
+
+        echo "Getting git remote"
+        git remote -v
+
+        echo "Pulling latest from origin"
+        git pull upstream master --allow-unrelated-histories
+        #git pull origin master
 
