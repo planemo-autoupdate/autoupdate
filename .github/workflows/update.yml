@@ -20,7 +20,7 @@ jobs:
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/galaxytools
-        ref: tool_wrappers
+        ref: master
         
     - uses: webfactory/ssh-agent@v0.4.1
       with:
@@ -28,10 +28,12 @@ jobs:
     # Download github cli
     - name: Download github cli
       run: |
-        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-        sudo apt-add-repository https://cli.github.com/packages
-        sudo apt update
-        sudo apt install gh
+        wget -c https://github.com/cli/cli/releases/download/v1.3.1/gh_1.3.1_linux_amd64.tar.gz
+        tar -xzf gh_1.3.1_linux_amd64.tar.gz
+        cd gh_1.3.1_linux_amd64
+        ./configure
+        make
+        sudo make install
         gh version
         
     # Runs a set of commands using the runners shell
@@ -74,4 +76,4 @@ jobs:
         echo "Pushing..."
         #git push https://$GITHUB_ACTOR:${{ secrets.PAT }}@github.com/$GITHUB_ACTOR/galaxytools.git master
         echo "Creating a PR..."
-        gh pr create --base master --head $GITHUB_ACTOR:tool_wrappers --title "Version Update" --body "XYZ" --repo lorrainealisha75/galaxytools
+        gh pr create --base master --head $GITHUB_ACTOR:master --title "Version Update" --body "XYZ" --repo lorrainealisha75/galaxytools
