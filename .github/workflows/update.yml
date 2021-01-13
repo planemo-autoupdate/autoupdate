@@ -61,7 +61,7 @@ jobs:
         echo "Current directory is:"
         pwd
         echo "Running autoupdate command..."
-        planemo autoupdate
+        planemo autoupdate -r
         git status
         echo "Adding..."
         git add .
