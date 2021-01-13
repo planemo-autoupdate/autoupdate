@@ -60,6 +60,8 @@ jobs:
         git config --global user.email "sbray@informatik.uni-freiburg.de"
         git config --global user.name "planemo-autoupdate"
 
+        cd galaxytools
+
         echo "Adding upstream..."
         git remote add upstream https://github.com/bgruening/galaxytools.git
 
@@ -94,6 +96,9 @@ jobs:
         gh pr create --base antarna --head $GITHUB_ACTOR:master --title "Version Update" --body "XYZ" --repo bgruening/galaxytools
 
 
+        cd ..
+        cd galaxy-tools-compchem
+        
         echo "Adding upstream..."
         git remote add upstream https://github.com/galaxycomputationalchemistry/galaxy-tools-compchem.git
 
