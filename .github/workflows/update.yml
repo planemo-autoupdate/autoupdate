@@ -81,7 +81,8 @@ jobs:
         git remote -v
 
         echo "Pulling latest from upstream"
-        git pull upstream master --allow-unrelated-histories
+        #git pull upstream master --allow-unrelated-histories
+        git pull origin master
 
         echo "Running autoupdate command..."
         planemo autoupdate -r
