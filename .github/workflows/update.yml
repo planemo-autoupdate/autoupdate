@@ -56,7 +56,7 @@ jobs:
         echo "Getting git remote"
         git remote -v
         echo "Pulling latest from upstream"
-        git pull upstream master --allow-unrelated-histories
+        git pull upstream tool_wrappers --allow-unrelated-histories
         #git pull origin master
         cd chemicaltoolbox/sucos
         echo "Current directory is:"
