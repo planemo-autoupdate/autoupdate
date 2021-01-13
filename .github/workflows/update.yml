@@ -28,14 +28,6 @@ jobs:
         repository: planemo-autoupdate/galaxytools
         ref: master
         path: galaxytools
-
-    - name: Checkout galaxy-tools-compchem
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.PAT }}
-        repository: planemo-autoupdate/galaxy-tools-compchem
-        ref: master
-        path: galaxy-tools-compchem
         
     - uses: webfactory/ssh-agent@v0.4.1
       with:
@@ -81,8 +73,8 @@ jobs:
         git remote -v
 
         echo "Pulling latest from upstream"
-        #git pull upstream master --allow-unrelated-histories
-        git pull origin master
+        git pull upstream master --allow-unrelated-histories
+        #git pull origin master
 
         echo "Running autoupdate command..."
         planemo autoupdate -r
