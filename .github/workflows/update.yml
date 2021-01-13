@@ -21,7 +21,6 @@ jobs:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/galaxytools
         ref: master
-        #path: galaxytools
         
     - uses: webfactory/ssh-agent@v0.4.1
       with:
@@ -51,9 +50,6 @@ jobs:
         # git credentials
         git config --global user.email "sbray@informatik.uni-freiburg.de"
         git config --global user.name "planemo-autoupdate"
-
-
-        #cd galaxytools
         echo "Adding upstream..."
         git remote add upstream https://github.com/lorrainealisha75/galaxytools.git
         echo "Getting git remote"
@@ -64,8 +60,8 @@ jobs:
         #cd chemicaltoolbox/sucos
         echo "Current directory is:"
         pwd
-        echo "Running autoupdate command...."
-        planemo autoupdate -r
+        echo "Running autoupdate command..."
+        planemo autoupdate
         git status
         echo "Adding..."
         git add .
