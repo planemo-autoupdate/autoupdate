@@ -73,4 +73,4 @@ jobs:
         echo "Pushing..."
         #git push https://$GITHUB_ACTOR:${{ secrets.PAT }}@github.com/$GITHUB_ACTOR/galaxytools.git master
         echo "Creating a PR..."
-        gh pr create --base lorrainealisha75:master --head planemo-autoupdate:master --title "Version Update" --body "XYZ" --repo lorrainealisha75/galaxytools
+        gh pr create --base master --head master --title "Version Update" --body "XYZ" --repo lorrainealisha75/galaxytools
