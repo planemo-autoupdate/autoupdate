@@ -31,7 +31,7 @@ jobs:
         wget -c https://github.com/cli/cli/releases/download/v1.3.1/gh_1.3.1_linux_amd64.tar.gz
         tar -xzf gh_1.3.1_linux_amd64.tar.gz
         cd gh_1.3.1_linux_amd64
-        sudo make install
+        make install
         gh version
         
     # Runs a set of commands using the runners shell
