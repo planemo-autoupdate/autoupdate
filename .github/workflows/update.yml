@@ -73,6 +73,8 @@ jobs:
         echo "Pulling latest from upstream..."
 
         new_branch_name="version_autoupdate_"$(date '+%Y-%m-%d')
+        git branch -d $new_branch_name
+        git push origin --delete $new_branch_name
         git fetch --all
         git checkout -b $new_branch_name upstream/master
 
