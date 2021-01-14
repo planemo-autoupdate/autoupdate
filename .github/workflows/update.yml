@@ -67,7 +67,7 @@ jobs:
 
         new_branch_name="version_autoupdate_"$(date '+%Y-%m-%d')
         git fetch --all
-        git checkout -b new_branch_name upstream/master
+        git checkout -b $new_branch_name upstream/master
 
         echo "Running autoupdate command..."
         planemo autoupdate -r
