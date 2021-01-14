@@ -65,4 +65,4 @@ jobs:
         gh auth login --with-token < token.txt
 
         echo "List PR..."
-        gh issue list -s open --repo bgruening/galaxytools -m "Version Autoupdate"
+        gh pr list -s open --repo bgruening/galaxytools -l "Version Autoupdate" --base master
