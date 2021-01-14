@@ -66,4 +66,24 @@ jobs:
         #git pull origin master
 
         new_branch_name="version_autoupdate_"$(date '+%Y-%m-%d')
-        echo $new_branch_name
+        git fetch --all
+        git checkout -b new_branch_name upstream/master
+
+        echo "Running autoupdate command..."
+        planemo autoupdate -r
+
+        git status
+
+        echo "Adding..."
+        git add .
+
+        echo "Committing..."
+        git commit -m "Version Update"
+
+        echo "Authenticating..."
+        echo ${{ secrets.PAT }} > token.txt
+        gh auth login --with-token < token.txt
+
+        echo "Creating a PR..."
+        gh pr create --base master --head $GITHUB_ACTOR:$new_branch_name --title "Version Update" --body "XYZ" --repo lorrainealisha75/galaxytools
+
