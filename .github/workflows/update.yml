@@ -53,8 +53,6 @@ jobs:
         git config --global user.email "sbray@informatik.uni-freiburg.de"
         git config --global user.name "planemo-autoupdate"
 
-        #cd galaxytools
-
         echo "Adding upstream..."
         git remote add upstream https://github.com/lorrainealisha75/galaxytools.git
 
