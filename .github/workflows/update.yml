@@ -65,4 +65,5 @@ jobs:
         gh auth login --with-token < token.txt
 
         echo "List PR..."
+        echo ${{ github.event.pull_request.user.login }}
         gh pr list -s open --repo bgruening/galaxytools --base master
