@@ -65,7 +65,7 @@ jobs:
         git config --global user.name "planemo-autoupdate"
 
         echo "Adding upstream..."
-        git remote add upstream https://github.com/lorrainealisha75/galaxytools.git
+        git remote add upstream https://github.com/bgruening/galaxytools.git
 
         echo "Getting git remote..."
         git remote -v
@@ -73,8 +73,12 @@ jobs:
         echo "Pulling latest from upstream..."
 
         new_branch_name="version_autoupdate_"$(date '+%Y-%m-%d')
-        #git branch -d $new_branch_name
-        git push origin --delete $new_branch_name
+
+        if [ `git branch --list $new_branch_name` ]
+        then
+            git push origin --delete $new_branch_name
+        fi
+
         git fetch --all
         git checkout -b $new_branch_name upstream/master
 
@@ -97,7 +101,7 @@ jobs:
         git push -u origin $new_branch_name
 
         echo "Creating a PR..."
-        gh pr create --base master --head $GITHUB_ACTOR:$new_branch_name --title "Version Autoupdate" --body "Autoupdate conda package versions" --repo lorrainealisha75/galaxytools
+        gh pr create --base master --head $GITHUB_ACTOR:$new_branch_name --title "Version Autoupdate" --body "Autoupdate conda package versions" --repo bgruening/galaxytools
 
 
         cd ..
@@ -111,6 +115,12 @@ jobs:
         echo "Pulling latest from upstream..."
 
         new_branch_name="version_autoupdate_"$(date '+%Y-%m-%d')
+        
+        if [ `git branch --list $new_branch_name` ]
+        then
+            git push origin --delete $new_branch_name
+        fi
+
         git fetch --all
         git checkout -b $new_branch_name upstream/master
 
