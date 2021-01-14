@@ -54,7 +54,7 @@ jobs:
         git config --global user.name "planemo-autoupdate"
 
         echo "Adding upstream..."
-        git remote add upstream https://github.com/lorrainealisha75/galaxytools.git
+        #git remote add upstream https://github.com/lorrainealisha75/galaxytools.git
 
         echo "Getting git remote"
         git remote -v
