@@ -84,6 +84,9 @@ jobs:
         echo ${{ secrets.PAT }} > token.txt
         gh auth login --with-token < token.txt
 
+        echo "Push branch to remote"
+        git push -u origin $new_branch_name
+
         echo "Creating a PR..."
         gh pr create --base master --head $GITHUB_ACTOR:$new_branch_name --title "Version Update" --body "XYZ" --repo lorrainealisha75/galaxytools
 
