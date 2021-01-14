@@ -60,5 +60,9 @@ jobs:
 
         cd galaxytools
 
+        echo "Authenticating..."
+        echo ${{ secrets.PAT }} > token.txt
+        gh auth login --with-token < token.txt
+
         echo "List PR..."
         gh issue list -A $GITHUB_ACTOR -L 1 -s open -l Version Autoupdate
