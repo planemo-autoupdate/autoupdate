@@ -16,12 +16,21 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+    - name: Checkout galaxy-tools-compchem
+      uses: actions/checkout@v2
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/galaxytools
         ref: master
         path: galaxytools
+
+    - name: Checkout galaxy-tools-compchem
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.PAT }}
+        repository: planemo-autoupdate/galaxy-tools-compchem
+        ref: master
+        path: galaxy-tools-compchem
         
     - uses: webfactory/ssh-agent@v0.4.1
       with:
@@ -58,12 +67,10 @@ jobs:
         echo "Adding upstream..."
         git remote add upstream https://github.com/lorrainealisha75/galaxytools.git
 
-        echo "Getting git remote"
+        echo "Getting git remote..."
         git remote -v
 
-        echo "Pulling latest from upstream"
-        #git pull upstream master --allow-unrelated-histories
-        #git pull origin master
+        echo "Pulling latest from upstream..."
 
         new_branch_name="version_autoupdate_"$(date '+%Y-%m-%d')
         git fetch --all
@@ -84,9 +91,44 @@ jobs:
         echo ${{ secrets.PAT }} > token.txt
         gh auth login --with-token < token.txt
 
-        echo "Push branch to remote"
+        echo "Push branch to remote..."
         git push -u origin $new_branch_name
 
         echo "Creating a PR..."
-        gh pr create --base master --head $GITHUB_ACTOR:$new_branch_name --title "Version Update" --body "XYZ" --repo lorrainealisha75/galaxytools
+        gh pr create --base master --head $GITHUB_ACTOR:$new_branch_name --title "Version Autoupdate" --body "Autoupdate conda package versions" --repo lorrainealisha75/galaxytools
 
+
+        cd ..
+        cd galaxy-tools-compchem
+        echo "Adding upstream..."
+        git remote add upstream https://github.com/galaxycomputationalchemistry/galaxy-tools-compchem.git
+
+        echo "Getting git remote..."
+        git remote -v
+
+        echo "Pulling latest from upstream..."
+
+        new_branch_name="version_autoupdate_"$(date '+%Y-%m-%d')
+        git fetch --all
+        git checkout -b $new_branch_name upstream/master
+
+        echo "Running autoupdate command..."
+        planemo autoupdate -r
+
+        git status
+
+        echo "Adding..."
+        git add .
+
+        echo "Committing..."
+        git commit -m "Version Autoupdate"
+
+        echo "Authenticating..."
+        echo ${{ secrets.PAT }} > token.txt
+        gh auth login --with-token < token.txt
+
+        echo "Push branch to remote..."
+        git push -u origin $new_branch_name
+
+        echo "Creating a PR..."
+        gh pr create --base master --head $GITHUB_ACTOR:$new_branch_name --title "Version Autoupdate" --body "Autoupdate conda package versions" --repo galaxycomputationalchemistry/galaxy-tools-compchem
