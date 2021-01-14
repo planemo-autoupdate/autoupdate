@@ -65,4 +65,4 @@ jobs:
         gh auth login --with-token < token.txt
 
         echo "List PR..."
-        gh issue list -A $GITHUB_ACTOR -L 1 -s open -l "Version Autoupdate" --repo bgruening/galaxytools
+        gh issue list -A $GITHUB_ACTOR -s open --repo bgruening/galaxytools
