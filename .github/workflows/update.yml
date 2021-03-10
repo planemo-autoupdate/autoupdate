@@ -71,34 +71,42 @@ jobs:
 
         echo "Pulling latest from upstream..."
 
-        new_branch_name="version_autoupdate_"$(date '+%Y-%m-%d')
+        # new_branch_name="version_autoupdate_"$(date '+%Y-%m-%d')
         
-        if [ `git branch --list $new_branch_name` ]
-        then
-            git push origin --delete $new_branch_name
-        fi
+        #if [ `git branch --list $new_branch_name` ]
+        #then
+        #    git push origin --delete $new_branch_name
+        #fi
 
         git fetch --all
-        git checkout -b $new_branch_name upstream/master
+        
+        REPOS=$(planemo ci_find_repos)
+        
+        for REPO in $REPOS; do
+          echo $REPO
+          # checkout branch, create if it doesn't exist
+          git checkout -b $REPO upstream/master || git checkout -b $REPO upstream/master
 
-        echo "Running autoupdate command..."
-        planemo autoupdate -r
+          echo "Running autoupdate command..."
+          planemo autoupdate $REPO
 
-        git status
+          if [[ ! $(git diff) ]]
+          then
+            git status
 
-        echo "Adding..."
-        git add .
+            echo "Adding..."
+            git add .
 
-        echo "Committing..."
-        git commit -m "Version Autoupdate"
+            echo "Committing..."
+            git commit -m "Version Autoupdate"
 
-        echo "Authenticating..."
-        echo ${{ secrets.PAT }} > token.txt
-        gh auth login --with-token < token.txt
+            echo "Authenticating..."
+            echo ${{ secrets.PAT }} > token.txt
+            gh auth login --with-token < token.txt
 
-        echo "Push branch to remote..."
-        git push -u origin $new_branch_name
-
+            echo "Push branch to remote..."
+            git push -u origin $new_branch_name
+        fi
 
         echo "Creating a PR..."
-        # gh pr create --base master --head $GITHUB_ACTOR:$new_branch_name --title "Version Autoupdate" --body "Autoupdate conda package versions" --repo galaxycomputationalchemistry/galaxy-tools-compchem
+        # gh pr create --base master --head $GITHUB_ACTOR:$new_branch_name --title "$REPO autoupdate" --body "Autoupdate conda package versions" --repo galaxycomputationalchemistry/galaxy-tools-compchem
