@@ -16,7 +16,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - name: Checkout galaxytool
+    - name: Checkout galaxy-tools-compchem
       uses: actions/checkout@v2
       with:
         token: ${{ secrets.PAT }}
@@ -60,10 +60,5 @@ jobs:
 
         cd galaxytools
 
-        echo "Authenticating..."
-        echo ${{ secrets.PAT }} > token.txt
-        gh auth login --with-token < token.txt
-
         echo "List PR..."
-        echo $GITHUB_ACTOR
-        gh pr list -s open --repo bgruening/galaxytools --base master
+        gh issue list -A $GITHUB_ACTOR -L 1 -s open -l Version Autoupdate
