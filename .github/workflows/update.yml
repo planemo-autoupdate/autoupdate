@@ -90,7 +90,7 @@ jobs:
           echo "Running autoupdate command..."
           planemo autoupdate $REPO
 
-          if [[ ! $(git diff) ]]
+          if [[ $(git diff) ]]
           then
             git status
 
