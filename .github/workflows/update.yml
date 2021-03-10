@@ -80,7 +80,7 @@ jobs:
         #    git push origin --delete $new_branch_name
         #fi
 
-        git pull --all
+        git fetch --all
         
         REPOS=$(planemo ci_find_repos)
         echo $REPOS
@@ -103,9 +103,9 @@ jobs:
             git commit -m "Version Autoupdate"            
 
             echo "Push branch to remote..."
-            git push -u origin $new_branch_name
+            git push -u origin $REPO
             echo "Creating a PR..."
-            # gh pr create --base master --head $GITHUB_ACTOR:$new_branch_name --title "$REPO autoupdate" --body "Autoupdate conda package versions" --repo galaxycomputationalchemistry/galaxy-tools-compchem
+            # gh pr create --base master --head $GITHUB_ACTOR:$REPO --title "$REPO autoupdate" --body "Autoupdate conda package versions" --repo galaxycomputationalchemistry/galaxy-tools-compchem
 
           fi
 
