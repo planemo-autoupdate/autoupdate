@@ -81,7 +81,7 @@ jobs:
         git fetch --all
         
         REPOS=$(planemo ci_find_repos)
-        
+        echo $REPOS
         for REPO in $REPOS; do
           echo $REPO
           # checkout branch, create if it doesn't exist
@@ -106,7 +106,9 @@ jobs:
 
             echo "Push branch to remote..."
             git push -u origin $new_branch_name
-        fi
+            echo "Creating a PR..."
+            # gh pr create --base master --head $GITHUB_ACTOR:$new_branch_name --title "$REPO autoupdate" --body "Autoupdate conda package versions" --repo galaxycomputationalchemistry/galaxy-tools-compchem
 
-        echo "Creating a PR..."
-        # gh pr create --base master --head $GITHUB_ACTOR:$new_branch_name --title "$REPO autoupdate" --body "Autoupdate conda package versions" --repo galaxycomputationalchemistry/galaxy-tools-compchem
+          fi
+
+        done
