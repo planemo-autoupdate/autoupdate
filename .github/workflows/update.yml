@@ -80,7 +80,7 @@ jobs:
         #    git push origin --delete $new_branch_name
         #fi
 
-        git fetch --all
+        git pull --all
         
         REPOS=$(planemo ci_find_repos)
         echo $REPOS
