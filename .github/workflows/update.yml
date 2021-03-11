@@ -80,15 +80,15 @@ jobs:
         #    git push origin --delete $new_branch_name
         #fi
 
-        git pull --all
+        git fetch --all
         
         REPOS=$(planemo ci_find_repos)
         echo $REPOS
         for REPO in $REPOS; do
-          git checkout upstream/master
+          #git checkout upstream/master
           echo $REPO
           # checkout branch, create if it doesn't exist
-          git checkout $REPO || git checkout -b $REPO
+          git checkout $REPO || git checkout -b $REPO upstream/master
 
           echo "Running autoupdate command..."
           planemo autoupdate $REPO --update_test_data
