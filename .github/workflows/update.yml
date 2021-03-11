@@ -88,15 +88,20 @@ jobs:
           # git checkout upstream/master
           echo $REPO
           # checkout branch, create if it doesn't exist
-          if [[ $(git branch -a --list origin/$REPO) ]]
+          if [[ ! $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO) ]]
           then
-            echo "Branch exists, checking out"
+            echo "PR exists, we will checkout the branch and add to it"
             git checkout --track origin/$REPO
           else
+            if [[ $(git branch -a --list origin/$REPO) ]]
+            then
+              echo "Branch exists without an open PR - deleting"
+              git branch -D origin/$REPO
+            fi
             echo "Creating branch and checking out"
             git checkout -b $REPO upstream/master
-          fi
-          
+            git push -f --set-upstream origin $REPO
+          fi          
           # git checkout $REPO || git checkout -b $REPO upstream/master
           git branch
           echo "Running autoupdate command..."
