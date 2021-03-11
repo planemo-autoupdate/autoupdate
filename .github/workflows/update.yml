@@ -88,10 +88,10 @@ jobs:
           # git checkout upstream/master
           echo $REPO
           # checkout branch, create if it doesn't exist
-          if [[ $(git branch --list $REPO) ]]
+          if [[ $(git branch -a --list origin/$REPO) ]]
           then
             echo "Branch exists, checking out"
-            git checkout $REPO
+            git checkout --track origin/$REPO
           else
             echo "Creating branch and checking out"
             git checkout -b $REPO upstream/master
