@@ -85,12 +85,13 @@ jobs:
         REPOS=$(planemo ci_find_repos)
         echo $REPOS
         for REPO in $REPOS; do
+          git checkout upstream/master
           echo $REPO
           # checkout branch, create if it doesn't exist
-          git checkout -b $REPO upstream/master || git checkout -b $REPO upstream/master
+          git checkout $REPO || git checkout -b $REPO
 
           echo "Running autoupdate command..."
-          planemo autoupdate $REPO
+          planemo autoupdate $REPO --update_test_data
 
           if [[ $(git diff) ]]
           then
@@ -103,7 +104,7 @@ jobs:
             git commit -m "Version Autoupdate"            
 
             echo "Push branch to remote..."
-            git push -f origin $REPO
+            git push origin $REPO
             
             if [[ ! $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO) ]]
             then
