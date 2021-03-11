@@ -89,7 +89,7 @@ jobs:
           echo $REPO
           # checkout branch, create if it doesn't exist
           git checkout $REPO || git checkout -b $REPO upstream/master
-
+          git branch
           echo "Running autoupdate command..."
           planemo autoupdate $REPO --update_test_data
 
