@@ -111,8 +111,8 @@ jobs:
             git status
 
             echo "Adding..."
+            rm -f $REPO/tool_test_output.*
             git add .
-            git rm tool_test_output.*
 
             echo "Committing..."
             git commit -m "Updating $REPO tool version(s)"
