@@ -107,7 +107,7 @@ jobs:
           echo "Running autoupdate command..."
           cd $REPO
           planemo autoupdate . --test --update_test_data
-          rm tool_test_output.*
+          rm -f tool_test_output.*
           cd $BASEDIR
 
           if [[ $(git diff) ]]
