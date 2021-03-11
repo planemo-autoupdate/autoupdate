@@ -112,6 +112,7 @@ jobs:
 
             echo "Adding..."
             git add .
+            git rm tool_test_output.*
 
             echo "Committing..."
             git commit -m "Updating $REPO tool version(s)"
