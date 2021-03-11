@@ -104,7 +104,7 @@ jobs:
           # git checkout $REPO || git checkout -b $REPO upstream/master
           git branch
           echo "Running autoupdate command..."
-          planemo autoupdate $REPO --update_test_data
+          planemo autoupdate $REPO --test --update_test_data
 
           if [[ $(git diff) ]]
           then
@@ -122,7 +122,9 @@ jobs:
             if [[ ! $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO) ]]
             then
               echo "Creating a PR..."
-              gh pr create --base master --head $GITHUB_ACTOR:$REPO --title "Updating $REPO tool version(s)" --body "Hello! This is an automated update of the following tool: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.\n\nPlease see https://github.com/planemo-autoupdate/autoupdate for more information." --repo galaxycomputationalchemistry/galaxy-tools-compchem
+              gh pr create --base master --head $GITHUB_ACTOR:$REPO --title "Updating $REPO tool version(s)" --repo galaxycomputationalchemistry/galaxy-tools-compchem --body "Hello! This is an automated update of the following tool: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.
+              
+              Please see https://github.com/planemo-autoupdate/autoupdate for more information."
             fi
 
           fi
