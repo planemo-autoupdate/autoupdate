@@ -101,10 +101,10 @@ jobs:
             git add .
 
             echo "Committing..."
-            git commit -m "Version Autoupdate"            
+            git commit -m "Version Autoupdate"
 
             echo "Push branch to remote..."
-            git push origin $REPO
+            git push --set-upstream origin $REPO
             
             if [[ ! $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO) ]]
             then
