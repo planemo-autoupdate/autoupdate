@@ -65,6 +65,7 @@ jobs:
         gh auth login --with-token < token.txt
         
         cd galaxy-tools-compchem
+        BASEDIR=`pwd`
         echo "Adding upstream..."
         git remote add upstream https://github.com/galaxycomputationalchemistry/galaxy-tools-compchem.git
 
@@ -104,14 +105,16 @@ jobs:
           # git checkout $REPO || git checkout -b $REPO upstream/master
           git branch
           echo "Running autoupdate command..."
-          planemo autoupdate $REPO --test --update_test_data
+          cd $REPO
+          planemo autoupdate . --test --update_test_data
+          rm tool_test_output.*
+          cd $BASEDIR
 
           if [[ $(git diff) ]]
           then
             git status
 
             echo "Adding..."
-            rm -f $REPO/tool_test_output.*
             git add .
 
             echo "Committing..."
@@ -124,8 +127,8 @@ jobs:
             then
               echo "Creating a PR..."
               gh pr create --base master --head $GITHUB_ACTOR:$REPO --title "Updating $REPO tool version(s)" --repo galaxycomputationalchemistry/galaxy-tools-compchem --body "Hello! This is an automated update of the following tool: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.
-              
-              Please see https://github.com/planemo-autoupdate/autoupdate for more information."
+        
+        Please see https://github.com/planemo-autoupdate/autoupdate for more information."
             fi
 
           fi
