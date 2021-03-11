@@ -96,11 +96,10 @@ jobs:
             if [[ $(git branch -a --list origin/$REPO) ]]
             then
               echo "Branch exists without an open PR - deleting"
-              git branch -D origin/$REPO
+              git push origin --delete $REPO
             fi
             echo "Creating branch and checking out"
             git checkout -b $REPO upstream/master
-            git push -f --set-upstream origin $REPO
           fi          
           # git checkout $REPO || git checkout -b $REPO upstream/master
           git branch
