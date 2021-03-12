@@ -48,7 +48,7 @@ jobs:
         echo "Installing planemo..."
         pip install https://github.com/simonbray/planemo/archive/autoupdate-sb.zip  # install from Simon's fork for now
         planemo conda_init
-        conda install gh
+        conda install gh -c conda-forge
 
 
         # git credentials
