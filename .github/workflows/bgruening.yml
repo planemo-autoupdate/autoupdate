@@ -28,12 +28,12 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     # Download github cli
-    - name: Download github cli
-      run: |
-        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-        sudo apt-add-repository https://cli.github.com/packages
-        sudo apt update
-        sudo apt install gh
+    # - name: Download github cli
+    #   run: |
+    #     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+    #     sudo apt-add-repository https://cli.github.com/packages
+    #     sudo apt update
+    #     sudo apt install gh
         
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
@@ -48,6 +48,8 @@ jobs:
         echo "Installing planemo..."
         pip install https://github.com/simonbray/planemo/archive/autoupdate-sb.zip  # install from Simon's fork for now
         planemo conda_init
+        conda install gh
+
 
         # git credentials
         git config --global user.email "sbray@informatik.uni-freiburg.de"
