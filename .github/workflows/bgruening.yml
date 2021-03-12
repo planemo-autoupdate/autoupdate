@@ -5,7 +5,7 @@ on:
   schedule:
     - cron: "0 4 * * 2"
   push:
-    branches: [ main ] 
+    branches: [ main ]
   
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -47,7 +47,6 @@ jobs:
         
         echo "Installing planemo..."
         pip install https://github.com/simonbray/planemo/archive/autoupdate-sb.zip  # install from Simon's fork for now
-        #planemo --help
         planemo conda_init
 
         # git credentials
@@ -65,7 +64,6 @@ jobs:
         git remote -v
 
         echo "Pulling latest from upstream..."
-
         git fetch --all
         
         REPOS=$(planemo ci_find_repos)
@@ -85,8 +83,7 @@ jobs:
             fi
             echo "Creating branch and checking out"
             git checkout -b $REPO upstream/master
-          fi          
-          # git checkout $REPO || git checkout -b $REPO upstream/master
+          fi
           git branch
           echo "Running autoupdate command..."
           cd $REPO
@@ -114,7 +111,5 @@ jobs:
         
         Please see https://github.com/planemo-autoupdate/autoupdate for more information."
             fi
-
           fi
-
         done
