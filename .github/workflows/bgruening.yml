@@ -40,7 +40,7 @@ jobs:
       run: |
         
         ls
-        ls $HOME
+        ls $HOME/*
         pwd
         cat bgruening_skip_list
         echo "Setting up virtual env..."
