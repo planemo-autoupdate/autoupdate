@@ -121,7 +121,7 @@ jobs:
             if [[ ! $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO) ]]
             then
               echo "Creating a PR..."
-              gh pr create --base master --head $GITHUB_ACTOR:$REPO --title "Updating $REPO tool version(s)" --repo bgruening/galaxytools --body "Hello! This is an automated update of the following tool repo: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.
+              gh pr create --base master --head planemo-autoupdate:$REPO --title "Updating $REPO tool version(s)" --repo bgruening/galaxytools --body "Hello! This is an automated update of the following tool repo: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.
         
         Please see https://github.com/planemo-autoupdate/autoupdate for more information."
             fi
