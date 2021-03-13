@@ -19,6 +19,7 @@ jobs:
     - name: Checkout autoupdate
       uses: actions/checkout@v2
       with:
+        token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/autoupdate
         ref: master
         path: autoupdate
