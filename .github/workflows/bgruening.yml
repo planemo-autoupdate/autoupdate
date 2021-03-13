@@ -38,6 +38,7 @@ jobs:
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
       run: |
+        cat bgruening_skip_list
         echo "Setting up virtual env..."
         pip3 install wheel
         sudo pip3 install virtualenv
@@ -89,7 +90,7 @@ jobs:
           git branch
           echo "Running autoupdate command..."
           cd $REPO
-          planemo autoupdate . --test --update_test_data
+          planemo autoupdate . --test --update_test_data --skiplist bgruening_skip_list
           rm -f tool_test_output.*
           cd $BASEDIR
 

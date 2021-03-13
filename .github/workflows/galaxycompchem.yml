@@ -95,7 +95,7 @@ jobs:
           git branch
           echo "Running autoupdate command..."
           cd $REPO
-          planemo autoupdate . --test --update_test_data
+          planemo autoupdate . --test --update_test_data --skiplist galaxycompchem_skip_list
           rm -f tool_test_output.*
           cd $BASEDIR
 
