@@ -69,8 +69,8 @@ jobs:
         echo ${{ secrets.PAT }} > token.txt
         gh auth login --with-token < token.txt
         
-        cd galaxytools
         BASEDIR=`pwd`
+        cd galaxytools
         echo "Adding upstream..."
         git remote add upstream https://github.com/bgruening/galaxytools.git
 
@@ -103,7 +103,7 @@ jobs:
           cd $REPO
           planemo autoupdate . --test --update_test_data --skiplist $BASEDIR/autoupdate/bgruening_skip_list
           rm -f tool_test_output.*
-          cd $BASEDIR
+          cd $BASEDIR/galaxytools
 
           if [[ $(git diff) ]]
           then
