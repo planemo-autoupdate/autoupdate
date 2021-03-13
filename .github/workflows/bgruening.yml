@@ -21,7 +21,7 @@ jobs:
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/autoupdate
-        ref: master
+        ref: main
         path: autoupdate
     - name: Checkout bgruening/galaxytools
       uses: actions/checkout@v2
