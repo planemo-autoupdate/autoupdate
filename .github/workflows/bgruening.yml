@@ -18,6 +18,10 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout autoupdate
       uses: actions/checkout@v2
+      with:
+        repository: planemo-autoupdate/autoupdate
+        ref: master
+        path: autoupdate
     - name: Checkout bgruening/galaxytools
       uses: actions/checkout@v2
       with:
