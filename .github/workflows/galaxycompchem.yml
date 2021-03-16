@@ -20,9 +20,9 @@ jobs:
       uses: actions/checkout@v2
       with:
         token: ${{ secrets.PAT }}
-        repository: planemo-autoupdate/galaxytools
-        ref: master
-        path: galaxytools
+        repository: planemo-autoupdate/autoupdate
+        ref: main
+        path: autoupdate
 
     - name: Checkout galaxy-tools-compchem
       uses: actions/checkout@v2
@@ -96,7 +96,7 @@ jobs:
           git branch
           echo "Running autoupdate command..."
           cd $REPO
-          planemo autoupdate . --test --update_test_data #--skiplist $BASEDIR/autoupdate/galaxycompchem_skip_list
+          planemo autoupdate . --test --update_test_data --skiplist $BASEDIR/autoupdate/galaxycompchem_skip_list
           rm -f tool_test_output.*
           cd $BASEDIR/galaxy-tools-compchem
 
