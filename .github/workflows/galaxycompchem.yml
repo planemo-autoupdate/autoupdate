@@ -4,8 +4,8 @@ name: galaxycompchem
 on:
   schedule:
     - cron: "0 4 * * 1"
-  # push:
-  #   branches: [ main ]
+  push:
+    branches: [ main ]
   
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
