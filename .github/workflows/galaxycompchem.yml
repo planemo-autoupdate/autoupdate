@@ -53,7 +53,7 @@ jobs:
         source .au/bin/activate
         
         echo "Installing planemo..."
-        pip install https://github.com/simonbray/planemo/archive/autoupdate-sb.zip  # install from Simon's fork for now
+        pip install https://github.com/galaxyproject/planemo/archive/refs/heads/master.zip
         planemo conda_init
 
         # git credentials
