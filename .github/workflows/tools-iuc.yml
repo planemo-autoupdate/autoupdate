@@ -1,0 +1,124 @@
+# This is a basic workflow to help you get started with Actions
+name: tools-iuc
+# Controls when the action will run. 
+on:
+  schedule:
+    - cron: "0 4 * * 1"
+  push:
+    branches: [ main ]
+  
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Checkout tools-iuc
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.PAT }}
+        repository: planemo-autoupdate/autoupdate
+        ref: main
+        path: autoupdate
+
+    - name: Checkout tools-iuc
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.PAT }}
+        repository: planemo-autoupdate/tools-iuc
+        ref: master
+        path: tools-iuc
+        
+    - uses: webfactory/ssh-agent@v0.4.1
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    # Download github cli
+    - name: Download github cli
+      run: |
+        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+        sudo apt-add-repository https://cli.github.com/packages
+        sudo apt update
+        sudo apt install gh
+        
+    # Runs a set of commands using the runners shell
+    - name: Run a multi-line script
+      run: |
+        echo "Setting up virtual env..."
+        pip3 install wheel
+        sudo pip3 install virtualenv
+        virtualenv .au
+        source .au/bin/activate
+        
+        echo "Installing planemo..."
+        pip install planemo
+        planemo conda_init
+
+        # git credentials
+        git config --global user.email "sbray@informatik.uni-freiburg.de"
+        git config --global user.name "planemo-autoupdate"
+        echo ${{ secrets.PAT }} > token.txt
+        gh auth login --with-token < token.txt
+        
+        BASEDIR=`pwd`
+        ls $BASEDIR/*
+        cd tools-iuc
+        echo "Adding upstream..."
+        git remote add upstream https://github.com/simonbray/tools-iuc.git
+
+        echo "Getting git remote..."
+        git remote -v
+
+        echo "Pulling latest from upstream..."
+        git fetch --all
+        
+        REPOS=$(planemo ci_find_repos)
+        echo $REPOS
+        for REPO in $REPOS; do
+          # git checkout upstream/master
+          echo $REPO
+          # checkout branch, create if it doesn't exist
+          if [[ $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO) ]]
+          then
+            echo "PR exists, we will checkout the branch and add to it"
+            git checkout --track origin/$REPO
+          else
+            if [[ $(git branch -a --list origin/$REPO) ]]
+            then
+              echo "Branch exists without an open PR - deleting"
+              git push origin --delete $REPO
+            fi
+            echo "Creating branch and checking out"
+            git checkout -b $REPO upstream/master
+          fi
+          git branch
+          echo "Running autoupdate command..."
+          cd $REPO
+          planemo autoupdate . --test --update_test_data --skiplist $BASEDIR/autoupdate/tools-iuc_skip_list
+          rm -f tool_test_output.*
+          cd $BASEDIR/tools-iuc
+
+          if [[ $(git diff) ]]
+          then
+            git status
+
+            echo "Adding..."
+            git add .
+
+            echo "Committing..."
+            git commit -m "Updating $REPO tool version(s)"
+
+            echo "Push branch to remote..."
+            git push --set-upstream origin $REPO
+            
+            if [[ ! $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO) ]]
+            then
+              echo "Creating a PR..."
+              gh pr create --base master --head planemo-autoupdate:$REPO --title "Updating $REPO tool version(s)" --repo simonbray/tools-iuc --body "Hello! This is an automated update of the following tool: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.
+        
+        Please see https://github.com/planemo-autoupdate/autoupdate for more information." --label 'tool-autoupdate'
+            fi
+          fi
+        done
