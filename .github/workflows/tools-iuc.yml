@@ -66,7 +66,7 @@ jobs:
         ls $BASEDIR/*
         cd tools-iuc
         echo "Adding upstream..."
-        git remote add upstream https://github.com/simonbray/tools-iuc.git
+        git remote add upstream https://github.com/galaxyproject/tools-iuc.git
 
         echo "Getting git remote..."
         git remote -v
@@ -116,7 +116,7 @@ jobs:
             if [[ ! $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO) ]]
             then
               echo "Creating a PR..."
-              gh pr create --base master --head planemo-autoupdate:$REPO --title "Updating $REPO tool version(s)" --repo simonbray/tools-iuc --body "Hello! This is an automated update of the following tool: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.
+              gh pr create --base master --head planemo-autoupdate:$REPO --title "Updating $REPO tool version(s)" --repo galaxyproject/tools-iuc --body "Hello! This is an automated update of the following tool: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.
         
         Please see https://github.com/planemo-autoupdate/autoupdate for more information."
             fi
