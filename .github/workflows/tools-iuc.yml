@@ -80,7 +80,7 @@ jobs:
           # git checkout upstream/master
           echo $REPO
           # checkout branch, create if it doesn't exist
-          if [[ $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO) ]]
+          if [[ $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO.\s*OPEN) ]]
           then
             echo "PR exists, we will checkout the branch and add to it"
             git checkout --track origin/$REPO
@@ -113,7 +113,7 @@ jobs:
             echo "Push branch to remote..."
             git push --set-upstream origin $REPO
             
-            if [[ ! $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO) ]]
+            if [[ ! $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO.\s*OPEN) ]]
             then
               echo "Creating a PR..."
               gh pr create --base master --head planemo-autoupdate:$REPO --title "Updating $REPO tool version(s)" --repo galaxyproject/tools-iuc --body "Hello! This is an automated update of the following tool: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.
