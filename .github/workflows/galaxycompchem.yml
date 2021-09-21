@@ -124,7 +124,7 @@ jobs:
 
 
               echo "Creating a PR..."
-              gh pr create --base master --head planemo-autoupdate:$REPO --title $TITLE --repo galaxycomputationalchemistry/galaxy-tools-compchem --body-file body.txt
+              gh pr create --base master --head planemo-autoupdate:$REPO --title "$TITLE" --repo galaxycomputationalchemistry/galaxy-tools-compchem --body-file body.txt
       
               #--body "Hello! This is an automated update of the following tool: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.
 
