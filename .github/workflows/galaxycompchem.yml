@@ -115,14 +115,23 @@ jobs:
             
             if [[ ! $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO) ]]
             then
+              TITLE=`python3 $BASEDIR/autoupdate/pr_text.py --repo $REPO --log autoupdate.log --shed .shed.yml --out body.txt`
+              #echo "Hello! This is an automated update of the following tool: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.\n\n" >> pr_body.txt
+              
+              
+              #echo "Please see https://github.com/planemo-autoupdate/autoupdate for more information."
+
+
               echo "Creating a PR..."
-              gh pr create --base master --head planemo-autoupdate:$REPO --title "Updating $REPO tool version(s)" --repo simonbray/galaxy-tools-compchem --body "Hello! This is an automated update of the following tool: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.
+              gh pr create --base master --head planemo-autoupdate:$REPO --title $TITLE --repo galaxycomputationalchemistry/galaxy-tools-compchem --body-file body.txt
+      
+              #--body "Hello! This is an automated update of the following tool: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.
 
-        ```
-        `cat autoupdate.log | grep 'Tool wrapper file'` 
-        ```
+              #      ```
+              #        `cat autoupdate.log | grep 'Tool wrapper file'` 
+              #      ```
 
-        Please see https://github.com/planemo-autoupdate/autoupdate for more information." --label 'tool-autoupdate'
+              #Please see https://github.com/planemo-autoupdate/autoupdate for more information." --label 'tool-autoupdate'
             fi
           fi
         done
