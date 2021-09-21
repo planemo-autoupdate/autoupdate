@@ -53,7 +53,8 @@ jobs:
         source .au/bin/activate
         
         echo "Installing planemo..."
-        pip install https://github.com/galaxyproject/planemo/archive/refs/heads/master.zip
+        #pip install https://github.com/galaxyproject/planemo/archive/refs/heads/master.zip
+        pip install https://github.com/simonbray/planemo/archive/refs/heads/au-version-logging.zip
         planemo conda_init
 
         # git credentials
