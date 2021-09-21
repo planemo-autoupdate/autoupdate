@@ -116,7 +116,7 @@ jobs:
             
             if [[ ! $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO) ]]
             then
-              TITLE=`python3 $BASEDIR/autoupdate/pr_text.py --repo $REPO --log autoupdate.log --shed .shed.yml --out body.txt`
+              TITLE=`python3 $BASEDIR/autoupdate/pr_text.py --repo $REPO --log autoupdate.log --shed $REPO/.shed.yml --out body.txt`
               #echo "Hello! This is an automated update of the following tool: **$REPO**. I created this PR because I think the tool's main dependency is out of date, i.e. there is a newer version available through conda.\n\n" >> pr_body.txt
               
               
