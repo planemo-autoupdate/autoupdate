@@ -103,12 +103,13 @@ jobs:
           if [[ $(git diff) ]]
           then
             git status
+            TITLE=$(python3 $BASEDIR/autoupdate/pr_text.py --repo $REPO --log $BASEDIR/autoupdate.log --shed $REPO/.shed.yml --out $BASEDIR/body.txt)
 
             echo "Adding..."
             git add .
 
             echo "Committing..."
-            git commit -m "Updating $REPO tool version(s)"
+            git commit -m "$TITLE"
 
             echo "Push branch to remote..."
             git push --set-upstream origin $REPO
@@ -116,7 +117,6 @@ jobs:
             if [[ ! $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO.\s*OPEN) ]]
             then
               echo "Creating a PR..."
-              TITLE=$(python3 $BASEDIR/autoupdate/pr_text.py --repo $REPO --log $BASEDIR/autoupdate.log --shed $REPO/.shed.yml --out $BASEDIR/body.txt)
               gh pr create --base master --head planemo-autoupdate:$REPO --title "$TITLE" --repo galaxyproject/tools-iuc --body-file $BASEDIR/body.txt
             fi
           fi
