@@ -1,5 +1,5 @@
 """
-Output autoupdate PR text 
+Output autoupdate PR text
 """
 
 import argparse
