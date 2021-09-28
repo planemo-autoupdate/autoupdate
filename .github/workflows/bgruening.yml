@@ -101,7 +101,7 @@ jobs:
           git branch
           echo "Running autoupdate command..."
           cd $REPO
-          planemo autoupdate . --test --update_test_data --skiplist $BASEDIR/autoupdate/bgruening_skip_list > $BASEDIR/galaxytools/autoupdate.log
+          planemo autoupdate . --test --update_test_data --skiplist $BASEDIR/autoupdate/bgruening_skip_list > $BASEDIR/autoupdate.log
           rm -f tool_test_output.*
           cd $BASEDIR/galaxytools
 
@@ -120,9 +120,9 @@ jobs:
             
             if [[ ! $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO) ]]
             then
-              TITLE=$(python3 $BASEDIR/autoupdate/pr_text.py --repo $REPO --log autoupdate.log --shed $REPO/.shed.yml --out body.txt)
+              TITLE=$(python3 $BASEDIR/autoupdate/pr_text.py --repo $REPO --log $BASEDIR/autoupdate.log --shed $REPO/.shed.yml --out $BASEDIR/body.txt)
               echo "Creating a PR..."
-              gh pr create --base master --head planemo-autoupdate:$REPO --title "$TITLE" --repo bgruening/galaxytools --body-file body.txt
+              gh pr create --base master --head planemo-autoupdate:$REPO --title "$TITLE" --repo bgruening/galaxytools --body-file $BASEDIR/body.txt
             fi
           fi
         done
