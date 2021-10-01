@@ -4,8 +4,8 @@ name: bgruening
 on:
   schedule:
     - cron: "0 4 * * 2"
-  #push:
-  #  branches: [ main ]
+  push:
+   branches: [ main ]
   
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -16,13 +16,14 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - name: Checkout autoupdate
+    - name: Checkout galaxytools
       uses: actions/checkout@v2
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/autoupdate
         ref: main
         path: autoupdate
+
     - name: Checkout bgruening/galaxytools
       uses: actions/checkout@v2
       with:
