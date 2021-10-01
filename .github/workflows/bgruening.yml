@@ -34,34 +34,18 @@ jobs:
     - uses: webfactory/ssh-agent@v0.4.1
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    # Download github cli
-    # - name: Download github cli
-    #   run: |
-    #     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-    #     sudo apt-add-repository https://cli.github.com/packages
-    #     sudo apt update
-    #     sudo apt install gh
-        
-    # Runs a set of commands using the runners shell
+
+    - name: Cache downloads
+      uses: actions/cache@v1
+      with:
+        path: ~/.cache/pip
+        key: cache-${{ matrix.python-version }}
+
     - name: Run a multi-line script
       run: |
-        
-        ls
-        ls $HOME/*
-        pwd
-        cat autoupdate/bgruening_skip_list
-        echo "Setting up virtual env..."
-        pip3 install wheel
-        sudo pip3 install virtualenv
-        virtualenv .au
-        source .au/bin/activate
-        #pip install conda
-        
-        echo "Installing planemo..."
-        pip install https://github.com/galaxyproject/planemo/archive/refs/heads/master.zip
-        planemo conda_init
-        conda install gh -c conda-forge
 
+        echo "Installing planemo..."
+        pip3 install https://github.com/simonbray/planemo/archive/refs/heads/au-wo-conda.zip
 
         # git credentials
         git config --global user.email "sbray@informatik.uni-freiburg.de"
@@ -101,7 +85,8 @@ jobs:
           git branch
           echo "Running autoupdate command..."
           cd $REPO
-          planemo autoupdate . --test --update_test_data --skiplist $BASEDIR/autoupdate/bgruening_skip_list > $BASEDIR/autoupdate.log
+          # --test --update_test_data
+          planemo autoupdate . --skiplist $BASEDIR/autoupdate/bgruening_skip_list > $BASEDIR/autoupdate.log
           rm -f tool_test_output.*
           cd $BASEDIR/galaxytools
 

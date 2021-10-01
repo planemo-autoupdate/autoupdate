@@ -35,26 +35,19 @@ jobs:
     - uses: webfactory/ssh-agent@v0.4.1
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-    # Download github cli
-    - name: Download github cli
-      run: |
-        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-        sudo apt-add-repository https://cli.github.com/packages
-        sudo apt update
-        sudo apt install gh
-        
+
+    - name: Cache downloads
+      uses: actions/cache@v1
+      with:
+        path: ~/.cache/pip
+        key: cache-${{ matrix.python-version }}
+
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
       run: |
-        echo "Setting up virtual env..."
-        pip3 install wheel
-        sudo pip3 install virtualenv
-        virtualenv .au
-        source .au/bin/activate
         
         echo "Installing planemo..."
-        pip install planemo
-        planemo conda_init
+        pip3 install https://github.com/simonbray/planemo/archive/refs/heads/au-wo-conda.zip
 
         # git credentials
         git config --global user.email "sbray@informatik.uni-freiburg.de"
