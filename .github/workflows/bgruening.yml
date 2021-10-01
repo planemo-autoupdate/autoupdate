@@ -46,7 +46,7 @@ jobs:
       run: |
 
         echo "Installing planemo..."
-        pip3 install https://github.com/simonbray/planemo/archive/refs/heads/au-wo-conda.zip
+        pip3 install https://github.com/galaxyproject/planemo/archive/refs/heads/master.zip
 
         # git credentials
         git config --global user.email "sbray@informatik.uni-freiburg.de"
