@@ -107,7 +107,7 @@ jobs:
             
             OLD_TITLE=$(gh pr list --limit 10000 | grep planemo-autoupdate:tools/optitype | cut -f 2)
             if [[ $OLD_TITLE ]] # just need to update PR title
-              if [[ $OLD_TITLE == *) ]] # older PRs
+              if [[ $OLD_TITLE == *\) ]] # older PRs
               then
                 NEW_TITLE=$(echo $OLD_TITLE | cut --complement -f 4 -d ' ' && echo  " to " && echo $TITLE | cut -f 7 -d ' ')
               else # newer PRs
