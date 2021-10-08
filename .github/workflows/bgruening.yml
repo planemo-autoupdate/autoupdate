@@ -115,7 +115,7 @@ jobs:
                 NEW_TITLE=$(echo $OLD_TITLE | cut --complement -f 7 -d ' ' && echo $TITLE | cut -f 7 -d ' ')
               fi
               PR_NUMBER=$(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO | cut -f 1)
-              gh pr edit $PR_NUMBER -t $NEW_TITLE
+              gh pr edit $PR_NUMBER -t "$NEW_TITLE"
             else # we need to create a PR
               echo "Creating a PR..."
               gh pr create --base master --head planemo-autoupdate:$REPO --title "$TITLE" --repo bgruening/galaxytools --body-file $BASEDIR/body.txt
