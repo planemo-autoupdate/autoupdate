@@ -105,7 +105,7 @@ jobs:
             echo "Push branch to remote..."
             git push --set-upstream origin $REPO
             
-            OLD_TITLE=$(gh pr list --limit 10000 | grep planemo-autoupdate:tools/optitype | cut -f 2)
+            OLD_TITLE=$(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO | cut -f 2)
             if [[ $OLD_TITLE ]] # just need to update PR title
             then
               if [[ $OLD_TITLE == *\) ]] # older PRs
@@ -114,7 +114,7 @@ jobs:
               else # newer PRs
                 NEW_TITLE=$(echo $OLD_TITLE | cut --complement -f 7 -d ' ' && echo $TITLE | cut -f 7 -d ' ')
               fi
-              PR_NUMBER=$(gh pr list --limit 10000 | grep planemo-autoupdate:tools/optitype | cut -f 1)
+              PR_NUMBER=$(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO | cut -f 1)
               gh pr edit $PR_NUMBER -t $NEW_TITLE
             else # we need to create a PR
               echo "Creating a PR..."
