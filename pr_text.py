@@ -40,7 +40,7 @@ if y.get('homepage_url'):
     text.append(f'**Project home page:** {url}')
 
 if y.get('maintainers'):
-    text.append('**Maintainers** ' + ' ,'.join([f'@{m}' for m in y.get('maintainers')]))
+    text.append('**Maintainers:** ' + ', '.join([f'@{m}' for m in y.get('maintainers')]))
 
 
 with open(args.out, 'w') as f:
