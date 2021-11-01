@@ -1,6 +1,6 @@
 # planemo-autoupdate
 
-[@planemo-autoupdate](https://github.com/planemo-autoupdate) is a (currently experimental) bot account for making automatic updates to [Galaxy](https://github.com/galaxyproject/galaxy) tools.
+[@planemo-autoupdate](https://github.com/planemo-autoupdate) is a bot account for making automatic updates to [Galaxy](https://github.com/galaxyproject/galaxy) tools.
 
 This repo contains the GitHub actions which regularly (weekly) run the automatic updates.
 
