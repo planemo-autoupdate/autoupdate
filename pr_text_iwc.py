@@ -10,24 +10,24 @@ import yaml
 parser = argparse.ArgumentParser()
 parser.add_argument('--repo', help='Tool repo')
 parser.add_argument('--log', help='Autoupdate log')
-parser.add_argument('--shed', help='Location of .shed.yml file input.')
+# parser.add_argument('--shed', help='Location of .shed.yml file input.')
 parser.add_argument('--out', help='Output file.')
 args = parser.parse_args()
 
-with open(args.log) as f:
-    for n in f.readlines():
-        if 'Updating' in n and 'from version' in n:
-            if n.split()[4] != n.split()[6]:
-                update = f"from version {n.split()[4]} to {n.split()[6]}"
-                break
-    else:
-        raise Error
+# with open(args.log) as f:
+#     for n in f.readlines():
+#         if 'Updating' in n and 'from version' in n:
+#             if n.split()[4] != n.split()[6]:
+#                 update = f"from version {n.split()[4]} to {n.split()[6]}"
+#                 break
+#     else:
+#         raise Error
 
 text = []
 
 text.append(f"Hello! This is an automated update of the following workflow: **{args.repo}**. I created this PR because I think one or more of the component tools are out of date, i.e. there is a newer version available on the ToolShed.")
 
-text.append(f"I have updated {args.repo} {update}.")
+# text.append(f"I have updated {args.repo} {update}.")
 
 
 # with open(args.shed) as f:
@@ -47,4 +47,5 @@ text.append(f"I have updated {args.repo} {update}.")
 with open(args.out, 'w') as f:
     f.write('\n\n'.join(text))
 
-print(f'Updating {args.repo} {update}')
+# print(f'Updating {args.repo} {update}')
+print(f'Updating {args.repo}')
