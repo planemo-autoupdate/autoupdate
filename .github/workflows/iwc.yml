@@ -29,7 +29,7 @@ jobs:
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/iwc
-        ref: master
+        ref: main
         path: iwc
         
     - uses: webfactory/ssh-agent@v0.4.1
