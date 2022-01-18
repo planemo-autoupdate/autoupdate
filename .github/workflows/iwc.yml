@@ -47,7 +47,8 @@ jobs:
       run: |
         
         echo "Installing planemo..."
-        pip3 install planemo
+        # pip3 install planemo
+        pip3 install https://github.com/simonbray/planemo/archive/refs/heads/au-wf-fix2.zip
 
         # git credentials
         git config --global user.email "sbray@informatik.uni-freiburg.de"
@@ -71,7 +72,8 @@ jobs:
         echo $REPOS
         for REPO in $REPOS; do
           # first check if it's in the skip list
-          if [[ ! `cat $BASEDIR/autoupdate/iwc_skip_list` =~ $REPO ]]
+          # if [[ ! `cat $BASEDIR/autoupdate/iwc_skip_list` =~ $REPO ]]
+          if [[ 1 ]]
           then
             # git checkout upstream/main
             echo $REPO
@@ -92,7 +94,7 @@ jobs:
             git branch
             echo "Running autoupdate command..."
             cd $REPO
-            planemo autoupdate . > $BASEDIR/autoupdate.log
+            planemo autoupdate . --skiplist $BASEDIR/autoupdate/iwc_skip_list > $BASEDIR/autoupdate.log
             rm -f tool_test_output.* tools.yml
             cd $BASEDIR/iwc
 
