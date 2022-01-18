@@ -5,11 +5,12 @@
 This repo contains the GitHub actions which regularly (weekly) run the automatic updates.
 
 ## Target repos
- * [tools-iuc repo](https://github.com/galaxyproject/tools-iuc)
- * [bgruening repo](https://github.com/bgruening/galaxytools)
- * [galaxycompchem repo](https://github.com/galaxycomputationalchemistry/galaxy-tools-compchem)
- * Your repo? Please make an issue or a PR.
-
+ * Tool repos:
+   * [tools-iuc repo](https://github.com/galaxyproject/tools-iuc)
+   * [bgruening repo](https://github.com/bgruening/galaxytools)
+   * [galaxycompchem repo](https://github.com/galaxycomputationalchemistry/galaxy-tools-compchem)
+   * Your repo? Please make an issue or a PR.
+ * Workflow repos (run monthly): [IWC](https://github.com/galaxyproject/iwc)
 ## See also
  * [Planemo](https://github.com/galaxyproject/planemo)
 
