@@ -70,7 +70,7 @@ jobs:
         REPOS=$(planemo ci_find_repos workflows/)
         echo $REPOS
         for REPO in $REPOS; do
-          # git checkout upstream/master
+          # git checkout upstream/main
           echo $REPO
           # checkout branch, create if it doesn't exist
           if [[ $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO.\s*OPEN) ]]
@@ -84,7 +84,7 @@ jobs:
               git push origin --delete $REPO
             fi
             echo "Creating branch and checking out"
-            git checkout -b $REPO upstream/master
+            git checkout -b $REPO upstream/main
           fi
           git branch
           echo "Running autoupdate command..."
@@ -120,7 +120,7 @@ jobs:
               gh pr edit $PR_NUMBER -t "$NEW_TITLE"
             else # we need to create a PR
               echo "Creating a PR..."
-              gh pr create --base master --head planemo-autoupdate:$REPO --title "$TITLE" --repo simonbray/iwc --body-file $BASEDIR/body.txt
+              gh pr create --base main --head planemo-autoupdate:$REPO --title "$TITLE" --repo simonbray/iwc --body-file $BASEDIR/body.txt
             fi
           fi
         done
