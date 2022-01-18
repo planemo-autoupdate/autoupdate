@@ -3,7 +3,7 @@ name: iwc
 # Controls when the action will run. 
 on:
   schedule:
-    - cron: "0 4 * * 1"
+    - cron: "0 7 17 * *"
   push:
     branches: [ main ]
   
@@ -59,7 +59,7 @@ jobs:
         ls $BASEDIR/*
         cd iwc
         echo "Adding upstream..."
-        git remote add upstream https://github.com/simonbray/iwc.git
+        git remote add upstream https://github.com/galaxyproject/iwc.git
 
         echo "Getting git remote..."
         git remote -v
@@ -93,7 +93,7 @@ jobs:
             echo "Running autoupdate command..."
             cd $REPO
             planemo autoupdate . > $BASEDIR/autoupdate.log
-            rm -f tool_test_output.*
+            rm -f tool_test_output.* tools.yml
             cd $BASEDIR/iwc
 
             if [[ $(git diff) ]]
@@ -123,7 +123,7 @@ jobs:
                 gh pr edit $PR_NUMBER -t "$NEW_TITLE"
               else # we need to create a PR
                 echo "Creating a PR..."
-                gh pr create --base main --head planemo-autoupdate:$REPO --title "$TITLE" --repo simonbray/iwc --body-file $BASEDIR/body.txt
+                gh pr create --base main --head planemo-autoupdate:$REPO --title "$TITLE" --repo galaxyproject/iwc --body-file $BASEDIR/body.txt
               fi
             fi
           else
