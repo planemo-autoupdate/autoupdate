@@ -1,11 +1,1 @@
-parallel-accession-download.ga
-gromacs-mmgbsa.ga
-gromacs-dctmd.ga
-fragment-based-docking-scoring.ga
-variation-reporting.ga
-consensus-from-variation.ga
-pe-wgs-variation.ga
-pe-wgs-ivar-analysis.ga
-se-wgs-variation.ga
-ont-artic-variation.ga
-pe-artic-variation.ga
+toolshed.g2.bx.psu.edu/repos/chemteam/gmx_merge_topology_files/gmx_merge_topology_files
