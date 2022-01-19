@@ -14,38 +14,20 @@ parser.add_argument('--log', help='Autoupdate log')
 parser.add_argument('--out', help='Output file.')
 args = parser.parse_args()
 
-# with open(args.log) as f:
-#     for n in f.readlines():
-#         if 'Updating' in n and 'from version' in n:
-#             if n.split()[4] != n.split()[6]:
-#                 update = f"from version {n.split()[4]} to {n.split()[6]}"
-#                 break
-#     else:
-#         raise Error
-
 text = []
 
-text.append(f"Hello! This is an automated update of the following workflow: **{args.repo}**. I created this PR because I think one or more of the component tools are out of date, i.e. there is a newer version available on the ToolShed.")
+text.append(f"Hello! This is an automated update of the following workflow: **{args.repo}**. I created this PR because I think one or more of the component tools are out of date, i.e. there is a newer version available on the ToolShed.\n")
+text.append("The following tools have been updated:")
 
-# text.append(f"I have updated {args.repo} {update}.")
-
-
-# with open(args.shed) as f:
-#     y = yaml.load(f)
-
-# if y.get('homepage_url'):
-#     url = y.get('homepage_url').strip('/')
-#     if 'github.com' in url:
-#         if len(url.split('github.com')[1].split('/')) > 1:
-#             url += '/releases'
-#     text.append(f'**Project home page:** {url}')
-
-# if y.get('maintainers'):
-#     text.append('**Maintainers:** ' + ', '.join([f'@{m}' for m in y.get('maintainers')]))
-
+with open(args.log) as f:
+    for n in f.readlines():
+        if ' -> ' in n:
+        text.append(f"* {n.split()[1]} was updated to {n.split()[1]}")
+    else:
+        raise Exception
 
 with open(args.out, 'w') as f:
-    f.write('\n\n'.join(text))
+    f.write('\n'.join(text))
 
 # print(f'Updating {args.repo} {update}')
 print(f'Updating {args.repo}')
