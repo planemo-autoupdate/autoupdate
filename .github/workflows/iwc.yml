@@ -101,7 +101,7 @@ jobs:
             if [[ $(git diff) ]]
             then
               git status
-              TITLE=$(python3 $BASEDIR/autoupdate/pr_text_iwc.py --repo $REPO --log $BASEDIR/autoupdate.log --out $BASEDIR/body.txt)
+              TITLE=$(python3 $BASEDIR/autoupdate/pr_text_iwc.py --repo $REPO --log $BASEDIR/autoupdate.log --out $BASEDIR/body.txt --changelog $REPO/CHANGELOG.md)
 
               echo "Adding..."
               git add .
