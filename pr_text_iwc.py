@@ -22,12 +22,9 @@ text.append("The following tools have been updated:")
 with open(args.log) as f:
     for n in f.readlines():
         if ' -> ' in n:
-            text.append(f"* {n.split()[1]} was updated to {n.split()[1]}")
-    else:
-        raise Exception
+            text.append(f"* `{n.split()[1]}` was updated to `{n.split()[3]}`")
 
 with open(args.out, 'w') as f:
     f.write('\n'.join(text))
 
-# print(f'Updating {args.repo} {update}')
 print(f'Updating {args.repo}')
