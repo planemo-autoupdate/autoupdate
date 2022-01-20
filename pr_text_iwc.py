@@ -42,6 +42,6 @@ if release_line:
         new_lines = [lines[0]] + new_change + [''.join(lines[1:])]
         f.seek(0)
         f.write('\n'.join(new_lines))
-    print(f"Updating {args.repo} {release_line.split('updated ')[-1].strip('.')}")
+    print(f"Updating {args.repo} {release_line.split('updated ')[-1].strip().strip('.')}")
 else:
     print(f"Updating {args.repo}")
