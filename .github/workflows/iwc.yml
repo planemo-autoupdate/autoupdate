@@ -48,7 +48,7 @@ jobs:
         
         echo "Installing planemo..."
         # pip3 install planemo
-        pip3 install https://github.com/simonbray/planemo/archive/refs/heads/au-wf-fix2.zip
+        pip3 install https://github.com/galaxyproject/planemo/archive/refs/heads/master.zip
 
         # git credentials
         git config --global user.email "sbray@informatik.uni-freiburg.de"
@@ -60,7 +60,7 @@ jobs:
         ls $BASEDIR/*
         cd iwc
         echo "Adding upstream..."
-        git remote add upstream https://github.com/simonbray/iwc.git
+        git remote add upstream https://github.com/galaxyproject/iwc.git
 
         echo "Getting git remote..."
         git remote -v
@@ -125,7 +125,7 @@ jobs:
                 gh pr edit $PR_NUMBER -t "$NEW_TITLE"
               else # we need to create a PR
                 echo "Creating a PR..."
-                gh pr create --base main --head planemo-autoupdate:$REPO --title "$TITLE" --repo simonbray/iwc --body-file $BASEDIR/body.txt
+                gh pr create --base main --head planemo-autoupdate:$REPO --title "$TITLE" --repo galaxyproject/iwc --body-file $BASEDIR/body.txt
               fi
             fi
           else
