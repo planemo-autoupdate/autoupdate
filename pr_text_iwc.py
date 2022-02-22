@@ -14,6 +14,7 @@ parser.add_argument('--log', help='Autoupdate log')
 # parser.add_argument('--shed', help='Location of .shed.yml file input.')
 parser.add_argument('--out', help='Output file.')
 parser.add_argument('--changelog', help='Changelog location')
+parser.add_argument('--pr-exists', type="integer", help='Whether a PR already exists')  # then we don't need to update the release notes
 args = parser.parse_args()
 
 text = []
@@ -35,7 +36,7 @@ with open(args.log) as f:
 with open(args.out, 'w') as f:
     f.write('\n'.join(text))
 
-if release_line:
+if release_line and args.pr_exists:
     with open(args.changelog, 'r+') as f:
         lines = f.readlines()
         new_change = [f"## [{release_line.split(' to ')[-1].strip().strip('.')}] " + str(date.today()), "", "### Automatic update"] + new_changelog_lines
