@@ -77,8 +77,8 @@ jobs:
           then
             echo "PR exists, we will checkout the branch and add to it"
             git checkout --track origin/$REPO
-            git fetch origin
-            git rebase origin/master
+            git fetch upstream
+            git rebase upstream/master
           else
             if [[ $(git branch -a --list origin/$REPO) ]]
             then
