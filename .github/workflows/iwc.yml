@@ -107,7 +107,7 @@ jobs:
               else
                 PR_EXISTS=0
               fi
-              TITLE=$(python3 $BASEDIR/autoupdate/pr_text_iwc.py --repo $REPO --log $BASEDIR/autoupdate.log --out $BASEDIR/body.txt --changelog $REPO/CHANGELOG.md) --pr-exists $PR_EXISTS
+              TITLE=$(python3 $BASEDIR/autoupdate/pr_text_iwc.py --repo $REPO --log $BASEDIR/autoupdate.log --out $BASEDIR/body.txt --changelog $REPO/CHANGELOG.md --pr-exists $PR_EXISTS)
 
               echo "Adding..."
               git add .
