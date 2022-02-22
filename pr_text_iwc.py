@@ -36,7 +36,7 @@ with open(args.log) as f:
 with open(args.out, 'w') as f:
     f.write('\n'.join(text))
 
-if release_line and args.pr_exists:
+if release_line and not args.pr_exists:
     with open(args.changelog, 'r+') as f:
         lines = f.readlines()
         new_change = [f"## [{release_line.split(' to ')[-1].strip().strip('.')}] " + str(date.today()), "", "### Automatic update"] + new_changelog_lines
