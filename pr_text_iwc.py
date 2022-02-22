@@ -14,7 +14,7 @@ parser.add_argument('--log', help='Autoupdate log')
 # parser.add_argument('--shed', help='Location of .shed.yml file input.')
 parser.add_argument('--out', help='Output file.')
 parser.add_argument('--changelog', help='Changelog location')
-parser.add_argument('--pr-exists', type="integer", help='Whether a PR already exists')  # then we don't need to update the release notes
+parser.add_argument('--pr-exists', type=int, help='Whether a PR already exists')  # then we don't need to update the release notes
 args = parser.parse_args()
 
 text = []
