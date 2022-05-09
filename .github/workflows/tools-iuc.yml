@@ -126,4 +126,6 @@ jobs:
               fi
             fi
           fi
+          # clean up for the next tool
+          git checkout -- $REPO
         done
