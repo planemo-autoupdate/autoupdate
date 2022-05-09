@@ -30,7 +30,7 @@ text.append(f"Hello! This is an automated update of the following tool: **{args.
 text.append(f"I have updated {args.repo} {update}.")
 
 with open(args.shed) as f:
-    y = yaml.load(f)
+    y = yaml.load(f, Loader=yaml.SafeLoader)
 
 if y.get('homepage_url'):
     url = y.get('homepage_url').strip('/')
