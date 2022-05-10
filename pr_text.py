@@ -42,6 +42,7 @@ if y.get('homepage_url'):
 if y.get('maintainers'):
     text.append('**Maintainers:** ' + ', '.join([f'@{m}' for m in y.get('maintainers')]))
 
+text.append("For any comments, queries or criticism about the bot, not related to the tool being updated in this PR, please create an issue [here](https://github.com/planemo-autoupdate/autoupdate/issues/new).")
 
 with open(args.out, 'w') as f:
     f.write('\n\n'.join(text))
