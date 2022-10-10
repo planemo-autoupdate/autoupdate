@@ -16,6 +16,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # used for the skip lists
     - name: Checkout tools-iuc
       uses: actions/checkout@v2
       with:
@@ -66,12 +67,15 @@ jobs:
 
         echo "Pulling latest from upstream..."
         git fetch --all
+        git pull upstream master 
+        git push origin master 
         
         REPOS=$(planemo ci_find_repos tools/)
         echo $REPOS
         for REPO in $REPOS; do
           # git checkout upstream/master
           echo $REPO
+
           # checkout branch, create if it doesn't exist
           if [[ $(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO.\s*OPEN) ]]
           then
