@@ -100,7 +100,7 @@ jobs:
 
             if [[ $(git diff) ]]
             then
-              OLD_TITLE=$(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO | cut -f 2)
+              OLD_TITLE=$(gh pr list --limit 10000 | grep planemo-autoupdate:$REPO.\s*OPEN | cut -f 2)
               if [[ $OLD_TITLE ]] # just need to update PR title
               then
                 PR_EXISTS=1
