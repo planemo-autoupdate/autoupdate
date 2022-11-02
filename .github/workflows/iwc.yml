@@ -66,8 +66,8 @@ jobs:
 
         echo "Pulling latest from upstream..."
         git fetch --all
-        git pull upstream master 
-        git push origin master 
+        git pull upstream main 
+        git push origin main 
         
         REPOS=$(planemo ci_find_repos workflows/)
         echo $REPOS
