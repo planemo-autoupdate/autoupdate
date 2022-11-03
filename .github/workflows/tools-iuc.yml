@@ -18,7 +18,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # used for the skip lists
     - name: Checkout autoupdate
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/autoupdate
@@ -26,19 +26,19 @@ jobs:
         path: autoupdate
 
     - name: Checkout tools-iuc
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/tools-iuc
         ref: master
         path: tools-iuc
         
-    - uses: webfactory/ssh-agent@v0.4.1
+    - uses: webfactory/ssh-agent@v0.7.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Cache downloads
-      uses: actions/cache@v1
+      uses: actions/cache@v3
       with:
         path: ~/.cache/pip
         key: cache-${{ matrix.python-version }}

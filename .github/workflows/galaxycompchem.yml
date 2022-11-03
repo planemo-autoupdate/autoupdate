@@ -17,7 +17,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout galaxy-tools-compchem
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/autoupdate
@@ -25,19 +25,19 @@ jobs:
         path: autoupdate
 
     - name: Checkout galaxy-tools-compchem
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/galaxy-tools-compchem
         ref: master
         path: galaxy-tools-compchem
         
-    - uses: webfactory/ssh-agent@v0.4.1
+    - uses: webfactory/ssh-agent@v0.7.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Cache downloads
-      uses: actions/cache@v1
+      uses: actions/cache@v3
       with:
         path: ~/.cache/pip
         key: cache-${{ matrix.python-version }}
