@@ -30,7 +30,7 @@ jobs:
       with:
         token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/tools-iuc
-        ref: master
+        ref: main
         path: tools-iuc
         
     - uses: webfactory/ssh-agent@v0.7.0
