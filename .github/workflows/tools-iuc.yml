@@ -66,8 +66,8 @@ jobs:
 
         echo "Pulling latest from upstream..."
         git fetch --all
-        git pull upstream master 
-        git push origin master 
+        git pull upstream main
+        git push origin main
         
         REPOS=$(planemo ci_find_repos tools/)
         echo $REPOS
@@ -86,7 +86,7 @@ jobs:
               git push origin --delete $REPO
             fi
             echo "Creating branch and checking out"
-            git checkout -b $REPO upstream/master
+            git checkout -b $REPO upstream/main
           fi
           git branch
           echo "Running autoupdate command..."
@@ -124,7 +124,7 @@ jobs:
                 gh pr edit $PR_NUMBER -t "$NEW_TITLE"
               else # we need to create a PR
                 echo "Creating a PR..."
-                gh pr create --base master --head planemo-autoupdate:$REPO --title "$TITLE" --repo galaxyproject/tools-iuc --body-file $BASEDIR/body.txt
+                gh pr create --base main --head planemo-autoupdate:$REPO --title "$TITLE" --repo galaxyproject/tools-iuc --body-file $BASEDIR/body.txt
               fi
             fi
           fi
