@@ -1,7 +1,7 @@
 name: keep alive
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 0 * * 0"
 
 jobs:
   keep-alive:
@@ -10,3 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: gautamkrishnar/keepalive-workflow@v1
+        with:
+          committer_username: galaxybot
+          committer_email: galaxybot@users.noreply.github.com
