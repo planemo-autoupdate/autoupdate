@@ -49,7 +49,7 @@ jobs:
         pip3 install https://github.com/galaxyproject/planemo/archive/refs/heads/master.zip
 
         # git credentials
-        git config --global user.email "sbray@informatik.uni-freiburg.de"
+        git config --global user.email "planemo-autoupdate@users.noreply.github.com"
         git config --global user.name "planemo-autoupdate"
         echo ${{ secrets.PAT }} > token.txt
         gh auth login --with-token < token.txt
