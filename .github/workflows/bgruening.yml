@@ -17,7 +17,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout planemo-autoupdate
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         #token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/autoupdate
@@ -25,7 +25,7 @@ jobs:
         path: autoupdate
 
     - name: Checkout bgruening/galaxytools
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         #token: ${{ secrets.PAT }}
         repository: planemo-autoupdate/galaxytools
