@@ -95,7 +95,6 @@ jobs:
             fi
             echo "Running autoupdate command..."
             cd "$REPO"
-            # --test --update_test_data
             planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" > "${{ github.workspace }}/autoupdate.log"
             rm -f tool_test_output.*
             cd -
