@@ -21,7 +21,7 @@ with open(args.log) as f:
                 update = f"from version {n.split()[4]} to {n.split()[6]}"
                 break
     else:
-        raise Error
+        raise Exception(f"`Updating ... from version` line not found in {args.log}")
 
 text = []
 
