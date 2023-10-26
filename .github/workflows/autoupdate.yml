@@ -1,0 +1,136 @@
+name: Autoupdate
+on:
+  schedule:
+    - cron: "0 4 * * 1"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    env:
+      python-version: '3.11'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - upstream_repo_owner: bgruening
+            upstream_repo_name: galaxytools
+            upstream_repo_branch: master
+            upstream_repo_dir: .
+          - upstream_repo_owner: galaxycomputationalchemistry
+            upstream_repo_name: galaxy-tools-compchem
+            upstream_repo_branch: master
+            upstream_repo_dir: .
+          - upstream_repo_owner: galaxyproject
+            upstream_repo_name: iwc
+            upstream_repo_branch: main
+            upstream_repo_dir: workflows/
+          - upstream_repo_owner: galaxyproject
+            upstream_repo_name: tools-iuc
+            upstream_repo_branch: main
+            upstream_repo_dir: tools/
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+        with:
+          path: autoupdate
+
+      - name: Checkout our fork of ${{ matrix.upstream_repo_name }}
+        uses: actions/checkout@v4
+        with:
+          repository: planemo-autoupdate/${{ matrix.upstream_repo_name }}
+          token: ${{ secrets.PAT }}  # So we can push to it
+          path: tools_repo
+          fetch-depth: 0  # So we can checkout other branches
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.python-version }}
+
+      - name: Cache pip dir
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: cache-${{ env.python-version }}
+
+      - name: Install planemo
+        run: |
+          # pip3 install https://github.com/galaxyproject/planemo/archive/refs/heads/master.zip
+          pip3 install planemo
+
+      - name: Set git credentials
+        run: |
+          git config --global user.email "planemo-autoupdate@users.noreply.github.com"
+          git config --global user.name "planemo-autoupdate"
+
+      - name: Pull from upstream tool repo and push to our fork
+        run: |
+          git remote add upstream "https://github.com/${{ matrix.upstream_repo_owner }}/${{ matrix.upstream_repo_name }}"
+          git pull upstream "${{ matrix.upstream_repo_branch}}"
+          git push origin "${{ matrix.upstream_repo_branch}}"
+        working-directory: ./tools_repo
+
+      - name: Run a multi-line script
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: |
+          REPOS=$(planemo ci_find_repos "${{ matrix.upstream_repo_dir }}")
+          for REPO in $REPOS; do
+            echo $REPO
+            # checkout branch, create if it doesn't exist
+            if gh_pr_list_out=$(gh pr list -A planemo-autoupdate --limit 1000 | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:$REPO\t"); then
+              OLD_TITLE=$(echo "$gh_pr_list_out" | cut -f 2)
+              PR_NUMBER=$(echo "$gh_pr_list_out" | cut -f 1)
+              echo "PR exists, we will checkout the branch and add to it"
+              git checkout --track "origin/$REPO"
+            else
+              if [ "$(git branch -a --list "origin/$REPO")" != "" ]; then
+                echo "Branch exists without an open PR - deleting"
+                git push origin --delete "$REPO"
+              fi
+              echo "Creating branch and checking out"
+              git checkout -b "$REPO" "upstream/${{ matrix.upstream_repo_branch }}"
+            fi
+            echo "Running autoupdate command..."
+            cd "$REPO"
+            planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" > "${{ github.workspace }}/autoupdate.log"
+            rm -f tool_test_output.*
+            cd -
+
+            if ! git diff --quiet; then
+              TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --shed "$REPO/.shed.yml" --out "${{ github.workspace }}/body.txt")
+
+              # first check if a closed PR exists with the same title - if so, we don't continue
+              if gh pr list -A planemo-autoupdate -s closed --limit 1000 | grep -q "$TITLE.*CLOSED"; then
+                echo "Found a closed PR with title: $TITLE"
+                # clean up for the next repo
+                git checkout -- .
+              else
+                echo "Adding..."
+                git add .
+
+                echo "Committing..."
+                git commit -m "$TITLE"
+
+                echo "Push branch to our fork"
+                git push --set-upstream origin "$REPO"
+
+                if [ -n "$OLD_TITLE" ]; then
+                  # just need to update PR title
+                  if [[ $OLD_TITLE == *\) ]]; then
+                    # older PRs
+                    NEW_TITLE="$OLD_TITLE $(echo "$TITLE" | cut -f 6,7 -d ' ')"
+                  else # newer PRs
+                    NEW_TITLE="$(echo "$OLD_TITLE" | cut --complement -f 7 -d ' ')$(echo "$TITLE" | cut -f 7 -d ' ')"
+                  fi
+                  gh pr edit "$PR_NUMBER" -t "$NEW_TITLE"
+                else # we need to create a PR
+                  echo "Creating a PR..."
+                  gh pr create --base "${{ matrix.upstream_repo_branch }}" --head "planemo-autoupdate:$REPO" --title "$TITLE" --repo "${{ matrix.upstream_repo_owner}}/${{ matrix.upstream_repo_name }}" --body-file "${{ github.workspace }}/body.txt"
+                fi
+              fi
+            fi
+          done
+        working-directory: ./tools_repo
