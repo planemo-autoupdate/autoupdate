@@ -86,6 +86,8 @@ jobs:
               echo "PR exists, we will checkout the branch and add to it"
               git checkout --track "origin/$REPO"
             else
+              OLD_TITLE=
+              PR_NUMBER=
               if [ "$(git branch -a --list "origin/$REPO")" != "" ]; then
                 echo "Branch exists without an open PR - deleting"
                 git push origin --delete "$REPO"
