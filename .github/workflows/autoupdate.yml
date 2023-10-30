@@ -123,7 +123,7 @@ jobs:
                     # older PRs
                     NEW_TITLE="$OLD_TITLE $(echo "$TITLE" | cut -f 6,7 -d ' ')"
                   else # newer PRs
-                    NEW_TITLE="$(echo "$OLD_TITLE" | cut --complement -f 7 -d ' ')$(echo "$TITLE" | cut -f 7 -d ' ')"
+                    NEW_TITLE="$(echo "$OLD_TITLE" | cut --complement -f 7 -d ' ') $(echo "$TITLE" | cut -f 7 -d ' ')"
                   fi
                   gh pr edit "$PR_NUMBER" -t "$NEW_TITLE"
                 else # we need to create a PR
