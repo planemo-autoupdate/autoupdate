@@ -102,6 +102,7 @@ jobs:
             cd -
 
             if ! git diff --quiet; then
+              git status
               TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --shed "$REPO/.shed.yml" --out "${{ github.workspace }}/body.txt")
 
               # first check if a closed PR exists with the same title - if so, we don't continue
