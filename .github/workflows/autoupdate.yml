@@ -79,8 +79,10 @@ jobs:
           REPOS=$(planemo ci_find_repos "${{ matrix.upstream_repo_dir }}")
           for REPO in $REPOS; do
             echo $REPO
-            # checkout branch, create if it doesn't exist
-            if gh_pr_list_out=$(gh pr list -A planemo-autoupdate --limit 1000 | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:$REPO\t"); then
+            # Checkout $REPO branch, create if it doesn't exist
+            # We cannot use the -A option of `gh pr list` because the PR author changes with the Personal Access Token used,
+            # so we filter on the 3rd output field (headRefName, i.e. remote_repository:branch).
+            if gh_pr_list_out=$(gh pr list --search "head:$REPO" | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:$REPO\t"); then
               OLD_TITLE=$(echo "$gh_pr_list_out" | cut -f 2)
               PR_NUMBER=$(echo "$gh_pr_list_out" | cut -f 1)
               echo "PR exists, we will checkout the branch and add to it"
@@ -105,8 +107,9 @@ jobs:
               git status
               TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --shed "$REPO/.shed.yml" --out "${{ github.workspace }}/body.txt")
 
-              # first check if a closed PR exists with the same title - if so, we don't continue
-              if gh pr list -A planemo-autoupdate -s closed --limit 1000 | grep -q "$TITLE.*CLOSED"; then
+              # First check if a closed PR exists with the same title - if so, we don't continue
+              # As above, we cannot use the -A option of `gh pr list`
+              if gh pr list --search "is:closed is:unmerged '$TITLE' in:title" | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:"; then
                 echo "Found a closed PR with title: $TITLE"
                 # clean up for the next repo
                 git checkout -- .
