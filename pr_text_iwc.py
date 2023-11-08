@@ -31,14 +31,17 @@ text.append(
 )
 
 with open(args.log) as f:
-    for n in f.readlines():
-        if " -> " in n:
-            text.append(f"* `{n.split()[1]}` should be updated to `{n.split()[3]}`")
+    for line in f.readlines():
+        if " -> " in line:
+            words = line.split()
+            from_version = words[1]
+            to_version = words[3]
+            text.append(f"* `{from_version}` should be updated to `{to_version}`")
             new_changelog_lines.append(
-                f"- `{n.split()[1]}` was updated to `{n.split()[3]}`"
+                f"- `{from_version}` was updated to `{to_version}`"
             )
-        if "The workflow release number has been updated" in n:
-            release_line = n
+        if "The workflow release number has been updated" in line:
+            release_line = line
             text.append(f"\n{release_line}")
 
 with open(args.out, "w") as f:
