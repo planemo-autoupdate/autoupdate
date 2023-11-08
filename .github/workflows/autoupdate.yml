@@ -84,11 +84,13 @@ jobs:
             # so we filter on the 3rd output field (headRefName, i.e. remote_repository:branch).
             if gh_pr_list_out=$(gh pr list --search "head:$REPO" | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:$REPO\t"); then
               OLD_TITLE=$(echo "$gh_pr_list_out" | cut -f 2)
+              PR_EXISTS=1
               PR_NUMBER=$(echo "$gh_pr_list_out" | cut -f 1)
               echo "PR exists, we will checkout the branch and add to it"
               git checkout --track "origin/$REPO"
             else
               OLD_TITLE=
+              PR_EXISTS=0
               PR_NUMBER=
               if [ "$(git branch -a --list "origin/$REPO")" != "" ]; then
                 echo "Branch exists without an open PR - deleting"
@@ -105,7 +107,14 @@ jobs:
 
             if ! git diff --quiet; then
               git status
-              TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --shed "$REPO/.shed.yml" --out "${{ github.workspace }}/body.txt")
+              case $REPO in
+                workflows/*)
+                  TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text_iwc.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --out "${{ github.workspace }}/body.txt" --changelog "$REPO/CHANGELOG.md" --pr-exists "$PR_EXISTS")
+                  ;;
+                *)
+                 TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --shed "$REPO/.shed.yml" --out "${{ github.workspace }}/body.txt")
+                 ;;
+              esac
 
               # First check if a closed PR exists with the same title - if so, we don't continue
               # As above, we cannot use the -A option of `gh pr list`
@@ -123,7 +132,7 @@ jobs:
                 echo "Push branch to our fork"
                 git push --set-upstream origin "$REPO"
 
-                if [ -n "$OLD_TITLE" ]; then
+                if [ "$PR_EXISTS" -eq 1 ]; then
                   # just need to update PR title
                   if [[ $OLD_TITLE == *\) ]]; then
                     # older PRs
