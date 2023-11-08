@@ -15,13 +15,19 @@ parser.add_argument('--out', help='Output file.')
 args = parser.parse_args()
 
 with open(args.log) as f:
-    for n in f.readlines():
-        if 'Updating' in n and 'from version' in n:
-            if n.split()[4] != n.split()[6]:
-                update = f"from version {n.split()[4]} to {n.split()[6]}"
+    lines = f.readlines()
+    for line in lines:
+        if "Updating" in line and "from version" in line:
+            words = line.split()
+            from_version = words[4]
+            to_version = words[6]
+            if from_version != to_version:
+                update = f"from version {from_version} to {to_version}"
                 break
     else:
-        raise Exception(f"`Updating ... from version` line not found in {args.log}")
+        raise Exception(
+            f"`Updating ... from version` line not found in {args.log}:\n{''.join(lines)}"
+        )
 
 text = []
 
