@@ -9,6 +9,8 @@ This repo contains the GitHub actions which regularly (weekly) run the automatic
    * [tools-iuc repo](https://github.com/galaxyproject/tools-iuc)
    * [bgruening repo](https://github.com/bgruening/galaxytools)
    * [galaxycompchem repo](https://github.com/galaxycomputationalchemistry/galaxy-tools-compchem)
+   * [iwc repo](https://github.com/galaxyproject/iwc)
+   * [lldelisle repo](https://github.com/lldelisle/tools-lldelisle)
    * Your repo? Please make an issue or a PR.
  * Workflow repos (run monthly): [IWC](https://github.com/galaxyproject/iwc)
 ## See also
