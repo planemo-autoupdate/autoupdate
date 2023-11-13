@@ -30,6 +30,10 @@ jobs:
             upstream_repo_name: tools-iuc
             upstream_repo_branch: main
             upstream_repo_dir: tools/
+          - upstream_repo_owner: lldelisle
+            upstream_repo_name: tools-lldelisle
+            upstream_repo_branch: master
+            upstream_repo_dir: tools/
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
