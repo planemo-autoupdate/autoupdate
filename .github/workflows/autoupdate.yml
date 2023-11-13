@@ -76,6 +76,10 @@ jobs:
           git push origin "${{ matrix.upstream_repo_branch}}"
         working-directory: ./tools_repo
 
+      - name: Ensure skip_list file exists
+        run: touch "${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list"
+        working-directory: ./autoupdate
+
       - name: Run a multi-line script
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
