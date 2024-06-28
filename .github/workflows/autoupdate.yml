@@ -160,10 +160,6 @@ jobs:
                   continue
                 fi
               fi
-              if [ "$(git branch -a --list "origin/$REPO")" != "" ]; then
-                echo "Branch exists but is outdated - deleting"
-                git push origin --delete "$REPO"
-              fi
               echo "Creating branch and checking out"
               git checkout -b "$REPO" "upstream/${{ matrix.upstream_repo_branch }}"
               echo "Adding..."
@@ -173,7 +169,7 @@ jobs:
               git commit -m "$TITLE"
 
               echo "Push branch to our fork"
-              git push --set-upstream origin "$REPO"
+              git push --force --set-upstream origin "$REPO"
 
               if [ "$PR_EXISTS" -eq 1 ]; then
                 # just need to update PR title
