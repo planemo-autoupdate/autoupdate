@@ -87,72 +87,110 @@ jobs:
           REPOS=$(planemo ci_find_repos "${{ matrix.upstream_repo_dir }}")
           for REPO in $REPOS; do
             echo $REPO
-            # Checkout $REPO branch, create if it doesn't exist
+            # First try to update
+            echo "Running autoupdate command..."
+            cd "$REPO"
+            planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" > "${{ github.workspace }}/autoupdate.log"
+            rm -f tool_test_output.* tools.yml
+            cd -
+            # Check if it changed something
+            if git diff --quiet; then
+              echo "nothing has been updated"
+              continue
+            fi
+            # Get the PR title and change the CHANGELOG.md for workflows
+            git status
+            case $REPO in
+              workflows/*)
+                TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text_iwc.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --out "${{ github.workspace }}/body.txt" --changelog "$REPO/CHANGELOG.md")
+                ;;
+                FILE_TO_CHECK=${REPO}/CHANGELOG.md;;
+              *)
+                TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --shed "$REPO/.shed.yml" --out "${{ github.workspace }}/body.txt")
+                ;;
+                FILE_TO_CHECK=;;
+            esac
+            # Check if there is a branch/PR that already exists
             # We cannot use the -A option of `gh pr list` because the PR author changes with the Personal Access Token used,
             # so we filter on the 3rd output field (headRefName, i.e. remote_repository:branch).
             if gh_pr_list_out=$(gh pr list --search "head:$REPO" | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:$REPO\t"); then
               OLD_TITLE=$(echo "$gh_pr_list_out" | cut -f 2)
               PR_EXISTS=1
               PR_NUMBER=$(echo "$gh_pr_list_out" | cut -f 1)
-              echo "PR exists, we will checkout the branch and add to it"
-              git checkout --track "origin/$REPO"
+              PR_STATUS="OPENED"
+              echo "PR exists and is opened"
+              DIFF_BRANCH="origin/$REPO"
             else
-              OLD_TITLE=
-              PR_EXISTS=0
-              PR_NUMBER=
+              # Check if a closed PR exists with the same title
+              if gh_pr_list_out=$(gh pr list --search "is:closed is:unmerged '$TITLE' in:title" | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:"); then
+                echo "Found a closed PR with title: $TITLE"
+                OLD_TITLE=$(echo "$gh_pr_list_out" | cut -f 2)
+                PR_EXISTS=1
+                PR_NUMBER=$(echo "$gh_pr_list_out" | cut -f 1)
+                PR_STATUS="CLOSED"
+                if [ "$(git branch -a --list "origin/$REPO")" != "" ]; then
+                  # The branch still exists and the PR should be reopened only if there is a new change
+                  DIFF_BRANCH="origin/$REPO"
+                else
+                  # The branch does not exists anymore so any change should reopen the PR
+                  DIFF_BRANCH="upstream/${{ matrix.upstream_repo_branch }}"
+                fi
+              else
+                OLD_TITLE=
+                PR_EXISTS=0
+                PR_NUMBER=
+                PR_STATUS=
+                if [ "$(git branch -a --list "origin/$REPO")" != "" ]; then
+                  echo "Branch exists without an open PR - deleting"
+                  git push origin --delete "$REPO"
+                fi
+                DIFF_BRANCH="upstream/${{ matrix.upstream_repo_branch }}"
+              fi
+            fi
+            if ! git diff $DIFF_BRANCH --quiet $FILE_TO_CHECK; then
+              echo "There are changes"
+              if [ "$PR_EXISTS" -eq 1 ]; then
+                # Check if there was manual commits
+                LAST_AUTHOR=$(git log -1 --pretty=format:'%an')
+                if [ "$LAST_AUTHOR" != "planemo-autoupdate" ]; then
+                  # There were manual commits we do not do anything
+                  gh pr comment "$PR_NUMBER" --body "There are new updates, if you want to integrate them, close the PR and delete branch."
+                  # clean up for the next repo
+                  git checkout -- .
+                  continue
+                fi
+              fi
               if [ "$(git branch -a --list "origin/$REPO")" != "" ]; then
-                echo "Branch exists without an open PR - deleting"
+                echo "Branch exists but is outdated - deleting"
                 git push origin --delete "$REPO"
               fi
               echo "Creating branch and checking out"
               git checkout -b "$REPO" "upstream/${{ matrix.upstream_repo_branch }}"
-            fi
-            echo "Running autoupdate command..."
-            cd "$REPO"
-            planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" > "${{ github.workspace }}/autoupdate.log"
-            rm -f tool_test_output.* tools.yml
-            cd -
+              echo "Adding..."
+              git add .
 
-            if ! git diff --quiet; then
-              git status
-              case $REPO in
-                workflows/*)
-                  TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text_iwc.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --out "${{ github.workspace }}/body.txt" --changelog "$REPO/CHANGELOG.md" --pr-exists "$PR_EXISTS")
-                  ;;
-                *)
-                 TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --shed "$REPO/.shed.yml" --out "${{ github.workspace }}/body.txt")
-                 ;;
-              esac
+              echo "Committing..."
+              git commit -m "$TITLE"
 
-              # First check if a closed PR exists with the same title - if so, we don't continue
-              # As above, we cannot use the -A option of `gh pr list`
-              if gh pr list --search "is:closed is:unmerged '$TITLE' in:title" | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:"; then
-                echo "Found a closed PR with title: $TITLE"
-                # clean up for the next repo
-                git checkout -- .
-              else
-                echo "Adding..."
-                git add .
+              echo "Push branch to our fork"
+              git push --set-upstream origin "$REPO"
 
-                echo "Committing..."
-                git commit -m "$TITLE"
-
-                echo "Push branch to our fork"
-                git push --set-upstream origin "$REPO"
-
-                if [ "$PR_EXISTS" -eq 1 ]; then
-                  # just need to update PR title
-                  if [[ $OLD_TITLE == *\) ]]; then
-                    # older PRs
-                    NEW_TITLE="$OLD_TITLE $(echo "$TITLE" | cut -f 6,7 -d ' ')"
-                  else # newer PRs
-                    NEW_TITLE="$(echo "$OLD_TITLE" | cut --complement -f 7 -d ' ') $(echo "$TITLE" | cut -f 7 -d ' ')"
-                  fi
-                  gh pr edit "$PR_NUMBER" -t "$NEW_TITLE"
-                else # we need to create a PR
-                  echo "Creating a PR..."
-                  gh pr create --base "${{ matrix.upstream_repo_branch }}" --head "planemo-autoupdate:$REPO" --title "$TITLE" --repo "${{ matrix.upstream_repo_owner}}/${{ matrix.upstream_repo_name }}" --body-file "${{ github.workspace }}/body.txt"
+              if [ "$PR_EXISTS" -eq 1 ]; then
+                # just need to update PR title
+                if [[ $OLD_TITLE == *\) ]]; then
+                  # older PRs
+                  NEW_TITLE="$OLD_TITLE $(echo "$TITLE" | cut -f 6,7 -d ' ')"
+                else # newer PRs
+                  NEW_TITLE="$(echo "$OLD_TITLE" | cut --complement -f 7 -d ' ') $(echo "$TITLE" | cut -f 7 -d ' ')"
                 fi
+                gh pr edit "$PR_NUMBER" -t "$NEW_TITLE"
+                # If the PR is closed, we need to reopen it.
+                if [ "$PR_STATUS" = "CLOSED" ]; then
+                  gh pr reopen "$PR_NUMBER"
+                fi
+              else # we need to create a PR
+                echo "Creating a PR..."
+                gh pr create --base "${{ matrix.upstream_repo_branch }}" --head "planemo-autoupdate:$REPO" --title "$TITLE" --repo "${{ matrix.upstream_repo_owner}}/${{ matrix.upstream_repo_name }}" --body-file "${{ github.workspace }}/body.txt"
               fi
             fi
           done
