@@ -103,12 +103,12 @@ jobs:
             case $REPO in
               workflows/*)
                 TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text_iwc.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --out "${{ github.workspace }}/body.txt" --changelog "$REPO/CHANGELOG.md")
+                FILE_TO_CHECK=${REPO}/CHANGELOG.md
                 ;;
-                FILE_TO_CHECK=${REPO}/CHANGELOG.md;;
               *)
                 TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --shed "$REPO/.shed.yml" --out "${{ github.workspace }}/body.txt")
+                FILE_TO_CHECK=
                 ;;
-                FILE_TO_CHECK=;;
             esac
             # Check if there is a branch/PR that already exists
             # We cannot use the -A option of `gh pr list` because the PR author changes with the Personal Access Token used,
