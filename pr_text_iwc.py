@@ -14,9 +14,6 @@ parser.add_argument("--log", help="Autoupdate log")
 # parser.add_argument("--shed", help="Location of .shed.yml file input.")
 parser.add_argument("--out", help="Output file.")
 parser.add_argument("--changelog", help="Changelog location")
-parser.add_argument(
-    "--pr-exists", type=int, help="Whether a PR already exists"
-)  # then we don't need to update the release notes
 args = parser.parse_args()
 
 text = []
@@ -48,18 +45,17 @@ with open(args.out, "w") as f:
     f.write("\n".join(text))
 
 if release_line:
-    if not args.pr_exists:
-        with open(args.changelog, "r+") as f:
-            lines = f.readlines()
-            new_change = [
-                f"## [{release_line.split(' to ')[-1].strip().strip('.')}] "
-                + str(date.today()),
-                "",
-                "### Automatic update",
-            ] + new_changelog_lines
-            new_lines = [lines[0]] + new_change + ["".join(lines[1:])]
-            f.seek(0)
-            f.write("\n".join(new_lines))
+    with open(args.changelog, "r+") as f:
+        lines = f.readlines()
+        new_change = [
+            f"## [{release_line.split(' to ')[-1].strip().strip('.')}] "
+            + str(date.today()),
+            "",
+            "### Automatic update",
+        ] + new_changelog_lines
+        new_lines = [lines[0]] + new_change + ["".join(lines[1:])]
+        f.seek(0)
+        f.write("\n".join(new_lines))
     print(
         f"Updating {args.repo} {release_line.split('updated ')[-1].strip().strip('.')}"
     )
