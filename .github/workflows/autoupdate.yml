@@ -84,13 +84,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
+          errors=""
           REPOS=$(planemo ci_find_repos "${{ matrix.upstream_repo_dir }}")
           for REPO in $REPOS; do
             echo $REPO
             # First try to update
             echo "Running autoupdate command..."
             cd "$REPO"
-            planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" > "${{ github.workspace }}/autoupdate.log"
+            # This may fail
+            planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" > "${{ github.workspace }}/autoupdate.log" || errors="$error\nCannot autoupdate $REPO"
             rm -f tool_test_output.* tools.yml
             cd -
             # Check if it changed something
@@ -185,11 +187,14 @@ jobs:
                   NEW_TITLE="$(echo "$OLD_TITLE" | cut --complement -f 7 -d ' ') $(echo "$TITLE" | cut -f 7 -d ' ')"
                 fi
                 if [ "$NEW_TITLE" != "$OLD_TITLE" ]; then
-                  gh pr edit "$PR_NUMBER" -t "$NEW_TITLE"
+                  # This may fail if for example the PR was opened by someone else like
+                  # https://github.com/bgruening/galaxytools/pull/1353
+                  gh pr edit "$PR_NUMBER" -t "$NEW_TITLE" || errors="$error\nCannot change title of PR $PR_NUMBER for $REPO"
                 fi
                 # If the PR is closed, we need to reopen it.
                 if [ "$PR_STATUS" = "CLOSED" ]; then
-                  gh pr reopen "$PR_NUMBER"
+                  # This may fail
+                  gh pr reopen "$PR_NUMBER" || errors="$error\nCannot reopen PR $PR_NUMBER for $REPO"
                 fi
                 # Comment on the PR
                 gh pr comment "$PR_NUMBER" --body "There are new updates, they have been integrated to the PR, check the file diff."
@@ -199,4 +204,9 @@ jobs:
               fi
             fi
           done
+          if [ ! -z "$error" ]; then
+            echo "ERRORS OCCURED DURING AUTOUPDATE:"
+            echo -e $error
+            exit 1
+          fi
         working-directory: ./tools_repo
