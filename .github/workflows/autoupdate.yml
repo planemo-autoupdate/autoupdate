@@ -124,15 +124,20 @@ jobs:
               # Check if a closed PR exists with the same title
               if gh_pr_list_out=$(gh pr list --search "is:closed is:unmerged '$TITLE' in:title" | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:"); then
                 echo "Found a closed PR with title: $TITLE"
-                OLD_TITLE=$(echo "$gh_pr_list_out" | cut -f 2)
-                PR_EXISTS=1
-                PR_NUMBER=$(echo "$gh_pr_list_out" | cut -f 1)
-                PR_STATUS="CLOSED"
                 if [ "$(git branch -a --list "origin/$REPO")" != "" ]; then
                   # The branch still exists and the PR should be reopened only if there is a new change
+                  OLD_TITLE=$(echo "$gh_pr_list_out" | cut -f 2)
+                  PR_EXISTS=1
+                  PR_NUMBER=$(echo "$gh_pr_list_out" | cut -f 1)
+                  PR_STATUS="CLOSED"
                   DIFF_BRANCH="origin/$REPO"
                 else
-                  # The branch does not exists anymore so any change should reopen the PR
+                  # The branch does not exists anymore let's do like if the PR were not existing:
+                  echo "The branch does not exists anymore, ignore PR."
+                  OLD_TITLE=
+                  PR_EXISTS=0
+                  PR_NUMBER=
+                  PR_STATUS=
                   DIFF_BRANCH="upstream/${{ matrix.upstream_repo_branch }}"
                 fi
               else
