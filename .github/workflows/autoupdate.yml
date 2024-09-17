@@ -150,8 +150,8 @@ jobs:
             if ! git diff $DIFF_BRANCH --quiet $FILE_TO_CHECK; then
               echo "There are changes"
               if [ "$PR_EXISTS" -eq 1 ]; then
-                # Check if there was manual commits
-                LAST_AUTHOR=$(git log -1 --pretty=format:'%an')
+                # Check if the last commit of the existing branch was manual
+                LAST_AUTHOR=$(git log -1 --pretty=format:'%an' $DIFF_BRANCH)
                 if [ "$LAST_AUTHOR" != "planemo-autoupdate" ]; then
                   # There were manual commits we do not do anything
                   gh pr comment "$PR_NUMBER" --body "There are new updates, if you want to integrate them, close the PR and delete branch."
