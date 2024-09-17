@@ -92,7 +92,7 @@ jobs:
             echo "Running autoupdate command..."
             cd "$REPO"
             # This may fail
-            planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" > "${{ github.workspace }}/autoupdate.log" || errors="$error\nCannot autoupdate $REPO"
+            planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" > "${{ github.workspace }}/autoupdate.log" || errors="${errors}\nCannot autoupdate $REPO"
             rm -f tool_test_output.* tools.yml
             cd -
             # Check if it changed something
@@ -184,12 +184,12 @@ jobs:
                 if [ "$NEW_TITLE" != "$OLD_TITLE" ]; then
                   # This may fail if for example the PR was opened by someone else like
                   # https://github.com/bgruening/galaxytools/pull/1353
-                  gh pr edit "$PR_NUMBER" -t "$NEW_TITLE" || errors="$error\nCannot change title of PR $PR_NUMBER for $REPO"
+                  gh pr edit "$PR_NUMBER" -t "$NEW_TITLE" || errors="${errors}\nCannot change title of PR $PR_NUMBER for $REPO"
                 fi
                 # If the PR is closed, we need to reopen it.
                 if [ "$PR_STATUS" = "CLOSED" ]; then
                   # This may fail
-                  gh pr reopen "$PR_NUMBER" || errors="$error\nCannot reopen PR $PR_NUMBER for $REPO"
+                  gh pr reopen "$PR_NUMBER" || errors="${errors}\nCannot reopen PR $PR_NUMBER for $REPO"
                 fi
                 # Comment on the PR
                 gh pr comment "$PR_NUMBER" --body "There are new updates, they have been integrated to the PR, check the file diff."
@@ -199,9 +199,9 @@ jobs:
               fi
             fi
           done
-          if [ ! -z "$error" ]; then
+          if [ ! -z "$errors" ]; then
             echo "ERRORS OCCURED DURING AUTOUPDATE:"
-            echo -e $error
+            echo -e $errors
             exit 1
           fi
         working-directory: ./tools_repo
