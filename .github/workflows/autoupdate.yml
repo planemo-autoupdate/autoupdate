@@ -124,7 +124,7 @@ jobs:
               DIFF_BRANCH="origin/$REPO"
             else
               # Check if a closed PR exists with the same title
-              if gh_pr_list_out=$(gh pr list --search "is:closed is:unmerged '$TITLE' in:title" | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:"); then
+              if gh_pr_list_out=$(gh pr list --search "is:closed is:unmerged '$TITLE' in:title" | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:" | head -n 1); then
                 echo "Found a closed PR with title: $TITLE"
                 OLD_TITLE=$(echo "$gh_pr_list_out" | cut -f 2)
                 PR_EXISTS=1
@@ -197,6 +197,10 @@ jobs:
                 echo "Creating a PR..."
                 gh pr create --base "${{ matrix.upstream_repo_branch }}" --head "planemo-autoupdate:$REPO" --title "$TITLE" --repo "${{ matrix.upstream_repo_owner}}/${{ matrix.upstream_repo_name }}" --body-file "${{ github.workspace }}/body.txt"
               fi
+            else
+              echo "No changes compared to $DIFF_BRANCH"
+              # clean up for the next repo
+              git checkout -- .
             fi
           done
           if [ ! -z "$errors" ]; then
