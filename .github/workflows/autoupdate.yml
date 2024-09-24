@@ -152,6 +152,15 @@ jobs:
               fi
             fi
             if ! git diff $DIFF_BRANCH --quiet $FILE_TO_CHECK; then
+              # Check if it is only the date in workflows
+              if [[ "$REPO" = "workflows/"* ]]; then
+                if [ $(git diff --numstat $DIFF_BRANCH $FILE_TO_CHECK | cut -f 1) = "1" ]; then
+                  echo "A single line was added, probably the date, nothing is changed"
+                  # clean up for the next repo
+                  git checkout -- .
+                  continue
+                fi
+              fi
               echo "There are changes"
               if [ "$PR_EXISTS" -eq 1 ]; then
                 # Check if the last commit of the existing branch was manual
