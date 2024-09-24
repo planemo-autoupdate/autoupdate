@@ -56,6 +56,11 @@ text.append(
     "For any comments, queries or criticism about the bot, not related to the tool being updated in this PR, please create an issue [here](https://github.com/planemo-autoupdate/autoupdate/issues/new)."
 )
 
+# Add info on the strategy
+text.append("\nIf you want to skip this change, close this PR without deleting the branch. It will be reopened if another change is detected.")
+text.append("Any commit from another author than 'planemo-autoupdate' will prevent more auto-updates.")
+text.append("To ignore manual changes and allow autoupdates, delete the branch.")
+
 with open(args.out, "w") as f:
     f.write("\n\n".join(text))
 

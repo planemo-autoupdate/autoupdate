@@ -44,6 +44,11 @@ with open(args.log) as f:
             release_line = line
             text.append(f"\n{release_line}")
 
+# Add info on the strategy
+text.append("\nIf you want to skip this change, close this PR without deleting the branch. It will be reopened if another change is detected.")
+text.append("Any commit from another author than 'planemo-autoupdate' will prevent more auto-updates.")
+text.append("To ignore manual changes and allow autoupdates, delete the branch.")
+
 with open(args.out, "w") as f:
     f.write("\n".join(text))
 
