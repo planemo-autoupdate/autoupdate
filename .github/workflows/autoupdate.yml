@@ -124,7 +124,9 @@ jobs:
               DIFF_BRANCH="origin/$REPO"
             else
               # Check if a closed PR exists with the same title
-              if gh_pr_list_out=$(gh pr list --search "is:closed is:unmerged '$TITLE' in:title" | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:" | head -n 1); then
+              if gh_pr_list_out=$(gh pr list --search "is:closed is:unmerged '$TITLE' in:title" | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:"); then
+                # Only take the first one
+                gh_pr_list_out=$(echo "$gh_pr_list_out" | head -n 1)
                 echo "Found a closed PR with title: $TITLE"
                 OLD_TITLE=$(echo "$gh_pr_list_out" | cut -f 2)
                 PR_EXISTS=1
