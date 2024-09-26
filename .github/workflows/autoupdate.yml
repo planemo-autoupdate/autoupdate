@@ -92,7 +92,7 @@ jobs:
             echo "Running autoupdate command..."
             cd "$REPO"
             # This may fail
-            planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" > "${{ github.workspace }}/autoupdate.log" || errors="${errors}\nCannot autoupdate $REPO"
+            planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" 2>&1 1> "${{ github.workspace }}/autoupdate.log" | tee "${{ github.workspace }}/autoupdate.err" || errors="${errors}\nCannot autoupdate $REPO, last line of stderr is\n$(tail -n 1 "${{ github.workspace }}/autoupdate.err")"
             rm -f tool_test_output.* tools.yml
             cd -
             # Check if it changed something
