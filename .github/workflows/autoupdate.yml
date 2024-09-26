@@ -109,7 +109,7 @@ jobs:
                 ;;
               *)
                 TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --shed "$REPO/.shed.yml" --out "${{ github.workspace }}/body.txt")
-                FILE_TO_CHECK=
+                FILE_TO_CHECK=${REPO}
                 ;;
             esac
             # Check if there is a branch/PR that already exists
