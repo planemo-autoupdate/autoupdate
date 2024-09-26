@@ -28,18 +28,26 @@ text.append(
 )
 
 with open(args.log) as f:
+    already_reported = {}
     for line in f.readlines():
         if " -> " in line:
             words = line.split()
             from_version = words[1]
             to_version = words[3]
-            text.append(f"* `{from_version}` should be updated to `{to_version}`")
-            new_changelog_lines.append(
-                f"- `{from_version}` was updated to `{to_version}`"
-            )
+            if to_version not in already_reported.get(from_version, []):
+                text.append(f"* `{from_version}` should be updated to `{to_version}`")
+                new_changelog_lines.append(
+                    f"- `{from_version}` was updated to `{to_version}`"
+                )
+                already_reported[from_version] = already_reported.get(from_version, []) + [to_version]
         if "The workflow release number has been updated" in line:
             release_line = line
             text.append(f"\n{release_line}")
+
+# Add info on the strategy
+text.append("\nIf you want to skip this change, close this PR without deleting the branch. It will be reopened if another change is detected.")
+text.append("Any commit from another author than 'planemo-autoupdate' will prevent more auto-updates.")
+text.append("To ignore manual changes and allow autoupdates, delete the branch.")
 
 with open(args.out, "w") as f:
     f.write("\n".join(text))

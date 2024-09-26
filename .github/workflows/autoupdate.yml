@@ -92,7 +92,7 @@ jobs:
             echo "Running autoupdate command..."
             cd "$REPO"
             # This may fail
-            planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" > "${{ github.workspace }}/autoupdate.log" || errors="${errors}\nCannot autoupdate $REPO"
+            planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" 2>&1 1> "${{ github.workspace }}/autoupdate.log" | tee "${{ github.workspace }}/autoupdate.err" || errors="${errors}\nCannot autoupdate $REPO, last line of stderr is\n$(tail -n 1 "${{ github.workspace }}/autoupdate.err")"
             rm -f tool_test_output.* tools.yml
             cd -
             # Check if it changed something
@@ -124,7 +124,9 @@ jobs:
               DIFF_BRANCH="origin/$REPO"
             else
               # Check if a closed PR exists with the same title
-              if gh_pr_list_out=$(gh pr list --search "is:closed is:unmerged '$TITLE' in:title" | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:" | head -n 1); then
+              if gh_pr_list_out=$(gh pr list --search "is:closed is:unmerged '$TITLE' in:title" | grep -P "^\d+\t[^\t]+\tplanemo-autoupdate:"); then
+                # Only take the first one
+                gh_pr_list_out=$(echo "$gh_pr_list_out" | head -n 1)
                 echo "Found a closed PR with title: $TITLE"
                 OLD_TITLE=$(echo "$gh_pr_list_out" | cut -f 2)
                 PR_EXISTS=1
@@ -150,6 +152,15 @@ jobs:
               fi
             fi
             if ! git diff $DIFF_BRANCH --quiet $FILE_TO_CHECK; then
+              # Check if it is only the date in workflows
+              if [[ "$REPO" = "workflows/"* ]]; then
+                if [ $(git diff --numstat $DIFF_BRANCH $FILE_TO_CHECK | cut -f 1) = "1" ]; then
+                  echo "A single line was added, probably the date, nothing is changed"
+                  # clean up for the next repo
+                  git checkout -- .
+                  continue
+                fi
+              fi
               echo "There are changes"
               if [ "$PR_EXISTS" -eq 1 ]; then
                 # Check if the last commit of the existing branch was manual
@@ -206,6 +217,15 @@ jobs:
           if [ ! -z "$errors" ]; then
             echo "ERRORS OCCURED DURING AUTOUPDATE:"
             echo -e $errors
+            # Write these errors to an issue
+            body="$(date), there were errors when running autoupdate\n\n$errors"
+            echo -e $body > body.txt
+            if gh_issue_list=$(gh issue list --author "planemo-autoupdate" | grep -P "^\d+\t[^\t]+\tAutoupdate errors\t"); then
+              gh issue comment $(echo "$gh_issue_list" | cut -f 1 | head -n 1) -F body.txt
+            else
+              gh issue create -t "Autoupdate errors" -F body.txt
+            fi
+            rm body.txt
             exit 1
           fi
         working-directory: ./tools_repo
