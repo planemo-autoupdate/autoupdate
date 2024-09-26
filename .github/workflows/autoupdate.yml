@@ -93,6 +93,10 @@ jobs:
             cd "$REPO"
             # This may fail
             planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" 2>&1 1> "${{ github.workspace }}/autoupdate.log" | tee "${{ github.workspace }}/autoupdate.err" || errors="${errors}\nCannot autoupdate $REPO, last line of stderr is\n$(tail -n 1 "${{ github.workspace }}/autoupdate.err")"
+            # Waiting for https://github.com/galaxyproject/planemo/issues/1478 to be solved
+            if [[ "$(tail -n 1 "${{ github.workspace }}/autoupdate.log")" = "Could not update"* ]]; then
+              errors="${errors}\n$(tail -n 1 "${{ github.workspace }}/autoupdate.log")\n$(tail -n 1 "${{ github.workspace }}/autoupdate.err")"
+            fi
             rm -f tool_test_output.* tools.yml
             cd -
             # Check if it changed something
