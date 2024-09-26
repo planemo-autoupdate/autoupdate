@@ -217,6 +217,15 @@ jobs:
           if [ ! -z "$errors" ]; then
             echo "ERRORS OCCURED DURING AUTOUPDATE:"
             echo -e $errors
+            # Write these errors to an issue
+            body="$(date), there were errors when running autoupdate\n\n$errors"
+            echo -e $body > body.txt
+            if gh_issue_list=$(gh issue list --author "planemo-autoupdate" | grep -P "^\d+\t[^\t]+\tAutoupdate errors\t"); then
+              gh issue comment $(echo "$gh_issue_list" | cut -f 1 | head -n 1) -F body.txt
+            else
+              gh issue create -t "Autoupdate errors" -F body.txt
+            fi
+            rm body.txt
             exit 1
           fi
         working-directory: ./tools_repo
