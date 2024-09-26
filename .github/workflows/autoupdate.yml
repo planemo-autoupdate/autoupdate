@@ -162,7 +162,7 @@ jobs:
                 fi
               fi
               echo "There are changes"
-              if [ "$PR_EXISTS" -eq 1 ]; then
+              if [ "$DIFF_BRANCH" = "origin/$REPO" ] ; then
                 # Check if the last commit of the existing branch was manual
                 LAST_AUTHOR=$(git log -1 --pretty=format:'%an' $DIFF_BRANCH)
                 if [ "$LAST_AUTHOR" != "planemo-autoupdate" ]; then
