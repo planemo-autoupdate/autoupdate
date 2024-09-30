@@ -92,7 +92,15 @@ jobs:
             echo "Running autoupdate command..."
             cd "$REPO"
             # This may fail
+            # To get an exit code of 1 even with tee:
+            set -o pipefail
             planemo autoupdate . --skiplist "${{ github.workspace }}/autoupdate/${{ matrix.upstream_repo_owner }}_${{ matrix.upstream_repo_name }}_skip_list" 2>&1 1> "${{ github.workspace }}/autoupdate.log" | tee "${{ github.workspace }}/autoupdate.err" || errors="${errors}\nCannot autoupdate $REPO, last line of stderr is\n$(tail -n 1 "${{ github.workspace }}/autoupdate.err")"
+            # Restore
+            set +o pipefail
+            # Waiting for https://github.com/galaxyproject/planemo/issues/1478 to be solved
+            if [[ "$(tail -n 1 "${{ github.workspace }}/autoupdate.log")" = "Could not update"* ]]; then
+              errors="${errors}\n$(tail -n 1 "${{ github.workspace }}/autoupdate.log")\n$(tail -n 1 "${{ github.workspace }}/autoupdate.err")"
+            fi
             rm -f tool_test_output.* tools.yml
             cd -
             # Check if it changed something
@@ -109,7 +117,7 @@ jobs:
                 ;;
               *)
                 TITLE=$(python3 "${{ github.workspace }}/autoupdate/pr_text.py" --repo "$REPO" --log "${{ github.workspace }}/autoupdate.log" --shed "$REPO/.shed.yml" --out "${{ github.workspace }}/body.txt")
-                FILE_TO_CHECK=
+                FILE_TO_CHECK=${REPO}
                 ;;
             esac
             # Check if there is a branch/PR that already exists
@@ -162,7 +170,7 @@ jobs:
                 fi
               fi
               echo "There are changes"
-              if [ "$PR_EXISTS" -eq 1 ]; then
+              if [ "$DIFF_BRANCH" = "origin/$REPO" ] ; then
                 # Check if the last commit of the existing branch was manual
                 LAST_AUTHOR=$(git log -1 --pretty=format:'%an' $DIFF_BRANCH)
                 if [ "$LAST_AUTHOR" != "planemo-autoupdate" ]; then
