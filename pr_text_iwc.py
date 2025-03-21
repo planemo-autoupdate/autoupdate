@@ -56,7 +56,7 @@ if release_line:
     with open(args.changelog, "r+") as f:
         lines = f.readlines()
         new_change = [
-            f"## [{release_line.split(' to ')[-1].strip().strip('.')}] "
+            f"## [{release_line.split(' to ')[-1].strip().strip('.')}] - "
             + str(date.today()),
             "",
             "### Automatic update",
