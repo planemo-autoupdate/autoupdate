@@ -49,7 +49,7 @@ jobs:
           path: tools_repo
           fetch-depth: 0  # So we can checkout other branches
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ env.python-version }}
 
