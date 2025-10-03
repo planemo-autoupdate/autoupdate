@@ -216,6 +216,8 @@ jobs:
                 echo "Creating a PR..."
                 gh pr create --base "${{ matrix.upstream_repo_branch }}" --head "planemo-autoupdate:$REPO" --title "$TITLE" --repo "${{ matrix.upstream_repo_owner}}/${{ matrix.upstream_repo_name }}" --body-file "${{ github.workspace }}/body.txt"
               fi
+              # Go back to the main branch
+              git checkout "${{ matrix.upstream_repo_branch }}"
             else
               echo "No changes compared to $DIFF_BRANCH"
               # clean up for the next repo
