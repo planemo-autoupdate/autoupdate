@@ -87,9 +87,14 @@ jobs:
           errors=""
           REPOS=$(planemo ci_find_repos "${{ matrix.upstream_repo_dir }}")
           for REPO in $REPOS; do
+            # Make sure we start from scratch:
+            echo "remove any uncommited changes and checkout the good branch"
+            git checkout -- .
+            git checkout "${{ matrix.upstream_repo_branch }}"
             echo $REPO
             # First try to update
             echo "Running autoupdate command..."
+            # Reach the good directory
             cd "$REPO"
             # This may fail
             # To get an exit code of 1 even with tee:
@@ -164,8 +169,6 @@ jobs:
               if [[ "$REPO" = "workflows/"* ]]; then
                 if [ $(git diff --numstat $DIFF_BRANCH $FILE_TO_CHECK | cut -f 1) = "1" ]; then
                   echo "A single line was added, probably the date, nothing is changed"
-                  # clean up for the next repo
-                  git checkout -- .
                   continue
                 fi
               fi
@@ -176,8 +179,6 @@ jobs:
                 if [ "$LAST_AUTHOR" != "planemo-autoupdate" ]; then
                   # There were manual commits we do not do anything
                   gh pr comment "$PR_NUMBER" --body "There are new updates, if you want to integrate them, close the PR and delete branch."
-                  # clean up for the next repo
-                  git checkout -- .
                   continue
                 fi
               fi
@@ -218,8 +219,6 @@ jobs:
               fi
             else
               echo "No changes compared to $DIFF_BRANCH"
-              # clean up for the next repo
-              git checkout -- .
             fi
           done
           if [ ! -z "$errors" ]; then
