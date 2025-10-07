@@ -87,7 +87,7 @@ jobs:
           errors=""
           REPOS=$(planemo ci_find_repos "${{ matrix.upstream_repo_dir }}")
           for REPO in $REPOS; do
-            # Make sure we start from crash:
+            # Make sure we start from scratch:
             echo "remove any uncommited changes and checkout the good branch"
             git checkout -- .
             git checkout "${{ matrix.upstream_repo_branch }}"
