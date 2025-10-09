@@ -53,17 +53,12 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ env.python-version }}
+          cache: pip
 
-      - name: Cache pip dir
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: cache-${{ env.python-version }}
-
-      - name: Install planemo
+      - name: Install requirements
         run: |
-          # pip3 install https://github.com/galaxyproject/planemo/archive/refs/heads/master.zip
-          pip3 install planemo
+          pip3 install -r requirements.txt
+        working-directory: ./autoupdate
 
       - name: Set git credentials
         run: |
