@@ -37,13 +37,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: autoupdate
           persist-credentials: false
 
       - name: Checkout our fork of ${{ matrix.upstream_repo_name }}
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: planemo-autoupdate/${{ matrix.upstream_repo_name }}
           token: ${{ secrets.PAT }}  # So we can push to it
