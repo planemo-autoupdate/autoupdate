@@ -204,11 +204,17 @@ jobs:
                 fi
                 # If the PR is closed, we need to reopen it.
                 if [ "$PR_STATUS" = "CLOSED" ]; then
-                  # This may fail
-                  gh pr reopen "$PR_NUMBER" || errors="${errors}\nCannot reopen PR $PR_NUMBER for $REPO"
+                  # This is failing:
+                  # gh pr reopen "$PR_NUMBER" || errors="${errors}\nCannot reopen PR $PR_NUMBER for $REPO"
+                  # So we just reopen a new one
+                  echo "Creating a PR..."
+                  gh pr create --base "${{ matrix.upstream_repo_branch }}" --head "planemo-autoupdate:$REPO" --title "$TITLE" --repo "${{ matrix.upstream_repo_owner}}/${{ matrix.upstream_repo_name }}" --body-file "${{ github.workspace }}/body.txt"
+                else
+                  # Comment on the PR
+                  gh pr comment "$PR_NUMBER" --body "There are new updates, they have been integrated to the PR, check the file diff."
                 fi
-                # Comment on the PR
-                gh pr comment "$PR_NUMBER" --body "There are new updates, they have been integrated to the PR, check the file diff."
+                # Go back to the main branch
+                git checkout "${{ matrix.upstream_repo_branch }}"
               else # we need to create a PR
                 echo "Creating a PR..."
                 gh pr create --base "${{ matrix.upstream_repo_branch }}" --head "planemo-autoupdate:$REPO" --title "$TITLE" --repo "${{ matrix.upstream_repo_owner}}/${{ matrix.upstream_repo_name }}" --body-file "${{ github.workspace }}/body.txt"
