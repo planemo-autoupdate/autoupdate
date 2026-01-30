@@ -6,7 +6,6 @@ import argparse
 
 import yaml
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--repo", help="Tool repo")
 parser.add_argument("--log", help="Autoupdate log")
@@ -25,9 +24,7 @@ with open(args.log) as f:
                 update = f"from version {from_version} to {to_version}"
                 break
     else:
-        raise Exception(
-            f"`Updating ... from version` line not found in {args.log}:\n{''.join(lines)}"
-        )
+        raise Exception(f"`Updating ... from version` line not found in {args.log}:\n{''.join(lines)}")
 
 text = []
 
@@ -48,16 +45,16 @@ if y.get("homepage_url"):
     text.append(f"**Project home page:** {url}")
 
 if y.get("maintainers"):
-    text.append(
-        "**Maintainers:** " + ", ".join([f"@{m}" for m in y.get("maintainers")])
-    )
+    text.append("**Maintainers:** " + ", ".join([f"@{m}" for m in y.get("maintainers")]))
 
 text.append(
     "For any comments, queries or criticism about the bot, not related to the tool being updated in this PR, please create an issue [here](https://github.com/planemo-autoupdate/autoupdate/issues/new)."
 )
 
 # Add info on the strategy
-text.append("\nIf you want to skip this change, close this PR without deleting the branch. It will be reopened if another change is detected.")
+text.append(
+    "\nIf you want to skip this change, close this PR without deleting the branch. It will be reopened if another change is detected."
+)
 text.append("Any commit from another author than 'planemo-autoupdate' will prevent more auto-updates.")
 text.append("To ignore manual changes and allow autoupdates, delete the branch.")
 

@@ -7,7 +7,6 @@ Also update changelog
 import argparse
 from datetime import date
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--repo", help="Tool repo")
 parser.add_argument("--log", help="Autoupdate log")
@@ -36,16 +35,16 @@ with open(args.log) as f:
             to_version = words[3]
             if to_version not in already_reported.get(from_version, []):
                 text.append(f"* `{from_version}` should be updated to `{to_version}`")
-                new_changelog_lines.append(
-                    f"- `{from_version}` was updated to `{to_version}`"
-                )
+                new_changelog_lines.append(f"- `{from_version}` was updated to `{to_version}`")
                 already_reported[from_version] = already_reported.get(from_version, []) + [to_version]
         if "The workflow release number has been updated" in line:
             release_line = line
             text.append(f"\n{release_line}")
 
 # Add info on the strategy
-text.append("\nIf you want to skip this change, close this PR without deleting the branch. It will be reopened if another change is detected.")
+text.append(
+    "\nIf you want to skip this change, close this PR without deleting the branch. It will be reopened if another change is detected."
+)
 text.append("Any commit from another author than 'planemo-autoupdate' will prevent more auto-updates.")
 text.append("To ignore manual changes and allow autoupdates, delete the branch.")
 
@@ -56,16 +55,13 @@ if release_line:
     with open(args.changelog, "r+") as f:
         lines = f.readlines()
         new_change = [
-            f"## [{release_line.split(' to ')[-1].strip().strip('.')}] - "
-            + str(date.today()),
+            f"## [{release_line.split(' to ')[-1].strip().strip('.')}] - " + str(date.today()),
             "",
             "### Automatic update",
         ] + new_changelog_lines
         new_lines = [lines[0]] + new_change + ["".join(lines[1:])]
         f.seek(0)
         f.write("\n".join(new_lines))
-    print(
-        f"Updating {args.repo} {release_line.split('updated ')[-1].strip().strip('.')}"
-    )
+    print(f"Updating {args.repo} {release_line.split('updated ')[-1].strip().strip('.')}")
 else:
     print(f"Updating {args.repo}")
