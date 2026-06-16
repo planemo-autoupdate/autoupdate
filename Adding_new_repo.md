@@ -16,7 +16,7 @@
 
 This is what the reviewer should do before merging the PR:
 
-1. Fork the repository under the planemo-autoupdate organisation as planemo-autoupdate/{owner}_{repository}.
+1. Fork the upstream repository under the `planemo-autoupdate` organisation as `${upstream_repo_owner}_${upstream_repo_name}`.
 
 2. In the fork settings on GitHub, give write access to the `gxydevbot` account.
 
