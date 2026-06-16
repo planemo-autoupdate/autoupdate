@@ -49,7 +49,7 @@ jobs:
       - name: Checkout our fork of ${{ matrix.upstream_repo_name }}
         uses: actions/checkout@v6
         with:
-          repository: planemo-autoupdate/${{ matrix.upstream_repo_name }}
+          repository: planemo-autoupdate/${{ matrix.upstream_repo_owner }}-${{ matrix.upstream_repo_name }}
           token: ${{ secrets.PAT }}  # So we can push to it
           path: tools_repo
           fetch-depth: 0  # So we can checkout other branches
