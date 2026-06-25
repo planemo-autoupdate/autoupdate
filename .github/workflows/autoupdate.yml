@@ -38,6 +38,11 @@ jobs:
             upstream_repo_name: galaxytools
             upstream_repo_branch: master
             upstream_repo_dir: tools/
+          - upstream_repo_owner: workflow4metabolomics
+            upstream_repo_name: tools-metabolomics
+            upstream_repo_branch: master
+            upstream_repo_dir: tools/
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
