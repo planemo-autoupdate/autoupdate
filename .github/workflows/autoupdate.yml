@@ -31,6 +31,7 @@ jobs:
             upstream_repo_name: tools-iuc
             upstream_repo_branch: main
             upstream_repo_dir: tools/
+            pr_label: autoupdate  # label added to new PRs; needs the label upstream and triage access for the bot
           - upstream_repo_owner: lldelisle
             upstream_repo_name: tools-lldelisle
             upstream_repo_branch: master
@@ -220,7 +221,7 @@ jobs:
                   # So we just reopen a new one
                   echo "Creating a PR..."
                   PR_URL=$(gh pr create --base "${{ matrix.upstream_repo_branch }}" --head "planemo-autoupdate:$REPO" --title "$TITLE" --repo "${{ matrix.upstream_repo_owner}}/${{ matrix.upstream_repo_name }}" --body-file "${{ github.workspace }}/body.txt")
-                  gh pr edit "$PR_URL" --add-label autoupdate || true
+                  if [ -n "${{ matrix.pr_label }}" ]; then gh pr edit "$PR_URL" --add-label "${{ matrix.pr_label }}" || true; fi
                 else
                   # Comment on the PR
                   gh pr comment "$PR_NUMBER" --body "There are new updates, they have been integrated to the PR, check the file diff."
@@ -229,9 +230,8 @@ jobs:
                 git checkout "${{ matrix.upstream_repo_branch }}"
               else # we need to create a PR
                 echo "Creating a PR..."
-                # Labeling needs an "autoupdate" label upstream and triage access for the bot; otherwise the PR stays unlabeled.
                 PR_URL=$(gh pr create --base "${{ matrix.upstream_repo_branch }}" --head "planemo-autoupdate:$REPO" --title "$TITLE" --repo "${{ matrix.upstream_repo_owner}}/${{ matrix.upstream_repo_name }}" --body-file "${{ github.workspace }}/body.txt")
-                gh pr edit "$PR_URL" --add-label autoupdate || true
+                if [ -n "${{ matrix.pr_label }}" ]; then gh pr edit "$PR_URL" --add-label "${{ matrix.pr_label }}" || true; fi
               fi
             else
               echo "No changes compared to $DIFF_BRANCH"
