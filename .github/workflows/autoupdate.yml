@@ -31,6 +31,7 @@ jobs:
             upstream_repo_name: tools-iuc
             upstream_repo_branch: main
             upstream_repo_dir: tools/
+            pr_label: autobump  # label added to new PRs; must exist in the upstream repo
           - upstream_repo_owner: lldelisle
             upstream_repo_name: tools-lldelisle
             upstream_repo_branch: master
@@ -219,7 +220,8 @@ jobs:
                   # gh pr reopen "$PR_NUMBER" || errors="${errors}\nCannot reopen PR $PR_NUMBER for $REPO"
                   # So we just reopen a new one
                   echo "Creating a PR..."
-                  gh pr create --base "${{ matrix.upstream_repo_branch }}" --head "planemo-autoupdate:$REPO" --title "$TITLE" --repo "${{ matrix.upstream_repo_owner}}/${{ matrix.upstream_repo_name }}" --body-file "${{ github.workspace }}/body.txt"
+                  PR_URL=$(gh pr create --base "${{ matrix.upstream_repo_branch }}" --head "planemo-autoupdate:$REPO" --title "$TITLE" --repo "${{ matrix.upstream_repo_owner}}/${{ matrix.upstream_repo_name }}" --body-file "${{ github.workspace }}/body.txt")
+                  if [ -n "${{ matrix.pr_label }}" ]; then gh pr edit "$PR_URL" --add-label "${{ matrix.pr_label }}" || errors="${errors}\nCannot add label ${{ matrix.pr_label }} to PR $PR_URL for $REPO"; fi
                 else
                   # Comment on the PR
                   gh pr comment "$PR_NUMBER" --body "There are new updates, they have been integrated to the PR, check the file diff."
@@ -228,7 +230,8 @@ jobs:
                 git checkout "${{ matrix.upstream_repo_branch }}"
               else # we need to create a PR
                 echo "Creating a PR..."
-                gh pr create --base "${{ matrix.upstream_repo_branch }}" --head "planemo-autoupdate:$REPO" --title "$TITLE" --repo "${{ matrix.upstream_repo_owner}}/${{ matrix.upstream_repo_name }}" --body-file "${{ github.workspace }}/body.txt"
+                PR_URL=$(gh pr create --base "${{ matrix.upstream_repo_branch }}" --head "planemo-autoupdate:$REPO" --title "$TITLE" --repo "${{ matrix.upstream_repo_owner}}/${{ matrix.upstream_repo_name }}" --body-file "${{ github.workspace }}/body.txt")
+                if [ -n "${{ matrix.pr_label }}" ]; then gh pr edit "$PR_URL" --add-label "${{ matrix.pr_label }}" || errors="${errors}\nCannot add label ${{ matrix.pr_label }} to PR $PR_URL for $REPO"; fi
               fi
             else
               echo "No changes compared to $DIFF_BRANCH"
