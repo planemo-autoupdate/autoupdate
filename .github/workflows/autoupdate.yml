@@ -31,7 +31,7 @@ jobs:
             upstream_repo_name: tools-iuc
             upstream_repo_branch: main
             upstream_repo_dir: tools/
-            pr_label: autoupdate  # label added to new PRs; must exist in the upstream repo
+            pr_label: autobump  # label added to new PRs; must exist in the upstream repo
           - upstream_repo_owner: lldelisle
             upstream_repo_name: tools-lldelisle
             upstream_repo_branch: master
