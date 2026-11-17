@@ -15,10 +15,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - upstream_repo_owner: bgruening
-            upstream_repo_name: galaxytools
-            upstream_repo_branch: master
-            upstream_repo_dir: .
           - upstream_repo_owner: galaxycomputationalchemistry
             upstream_repo_name: galaxy-tools-compchem
             upstream_repo_branch: master
